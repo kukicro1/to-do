@@ -135,7 +135,7 @@
     </main>
 
     <div id="popUpWindows">
-        <div id="addNewProjectWindow">
+        <div id="addNewProjectWindow" class="hidden">
             <div id="wrapNewProjectTitle">
                 <div>Add Project</div>
                 <button>X</button>
@@ -143,18 +143,19 @@
             <form action="xx" method="post" id="addNewProjectForm">
                 <div>Title</div>
                 <input type="text">
-                <div>
-                    <button>Cancel</button>
-                    <button>Add</button>
+                <div id="wrapButtons">
+                    <button type="submit">Cancel</button>
+                    <button type="submit">Add</button>
                 </div>
             </form>
         </div>
 
-        <div id="deleteProjectWindow"></div>
+        <div id="deleteProjectWindow" class="hidden"></div>
 
-        <div id="addNewTaskWindow"></div>
+        <div id="addNewTaskWindow" class="conta">
+            Isti window za add new task i edit task
+        </div>
     </div>
-
 
 </body>
 
