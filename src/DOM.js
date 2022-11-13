@@ -76,7 +76,7 @@ function renderToday() {
 
 function renderAllTasks() {
     allTasksButton.addEventListener('click', () => {
-        resetPage
+        resetPage()
         title.textContent = 'All Tasks'
     })
 }
@@ -121,63 +121,71 @@ function renderModals() {
     })
 }
 
+
+
 function exitModals() {
     exitAddProjectButton.addEventListener('click', () => {
-        modalContainer.classList.toggle('hidden')
-        addNewProjectModal.classList.toggle('hidden')
-        newProjectInput.value = ''
+        addProject()
     })
     cancelNewProject.addEventListener('click', () => {
-        modalContainer.classList.toggle('hidden')
-        addNewProjectModal.classList.toggle('hidden')
-        newProjectInput.value = ''
+        addProject()
     })
     exitDeleteProjectButton.addEventListener('click', () => {
-        modalContainer.classList.toggle('hidden')
-        deleteProjectModal.classList.toggle('hidden')
+        deleteProject()
     })
     cancelDeleteProject.addEventListener('click', () => {
-        modalContainer.classList.toggle('hidden')
-        deleteProjectModal.classList.toggle('hidden')
+        deleteProject()
     })
     exitDeleteTaskButton.addEventListener('click', () => {
-        modalContainer.classList.toggle('hidden')
-        deleteTaskModal.classList.toggle('hidden')
+        deleteTask()
     })
     cancelDeleteTask.addEventListener('click', () => {
-        modalContainer.classList.toggle('hidden')
-        deleteTaskModal.classList.toggle('hidden')
+        deleteTask()
     })
     exitAddTask.addEventListener('click', () => {
-        modalContainer.classList.toggle('hidden')
-        addTaskModal.classList.toggle('hidden')
-        addTaskTitleInput.value = ''
-        addTaskDescriptionInput.value = ''
-        addTaskDateInput.value = ''
-        addTaskPriorityInput.value = ''
+        addTask()
     })
     cancelAddTask.addEventListener('click', () => {
-        modalContainer.classList.toggle('hidden')
-        addTaskModal.classList.toggle('hidden')
-        addTaskTitleInput.value = ''
-        addTaskDescriptionInput.value = ''
-        addTaskDateInput.value = ''
-        addTaskPriorityInput.value = ''
+        addTask()
     })
     exitEditTask.addEventListener('click', () => {
-        modalContainer.classList.toggle('hidden')
-        editTaskModal.classList.toggle('hidden')
-        editTaskTitleInput.value = ''
-        editTaskDescriptionInput.value = ''
-        editTaskDateInput.value = ''
-        editTaskPriorityInput.value = ''
+        editTask()
     })
     cancelEditTask.addEventListener('click', () => {
-        modalContainer.classList.toggle('hidden')
-        editTaskModal.classList.toggle('hidden')
-        editTaskTitleInput.value = ''
-        editTaskDescriptionInput.value = ''
-        editTaskDateInput.value = ''
-        editTaskPriorityInput.value = ''
+        editTask()
     })
+}
+
+function addProject() {
+    modalContainer.classList.toggle('hidden')
+    addNewProjectModal.classList.toggle('hidden')
+    newProjectInput.value = ''
+}
+
+function deleteProject() {
+    modalContainer.classList.toggle('hidden')
+    deleteProjectModal.classList.toggle('hidden')
+}
+
+function deleteTask() {
+    modalContainer.classList.toggle('hidden')
+    deleteTaskModal.classList.toggle('hidden')
+}
+
+function editTask() {
+    modalContainer.classList.toggle('hidden')
+    editTaskModal.classList.toggle('hidden')
+    editTaskTitleInput.value = ''
+    editTaskDescriptionInput.value = ''
+    editTaskDateInput.value = ''
+    editTaskPriorityInput.value = ''
+}
+
+function addTask() {
+    modalContainer.classList.toggle('hidden')
+    addTaskModal.classList.toggle('hidden')
+    addTaskTitleInput.value = ''
+    addTaskDescriptionInput.value = ''
+    addTaskDateInput.value = ''
+    addTaskPriorityInput.value = ''
 }
