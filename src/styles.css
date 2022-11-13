@@ -218,11 +218,15 @@ main {
 #taskInfo {
     font-size: 1.5em;
     display: flex;
-    justify-content: start;
+    justify-content: space-between;
     align-items: center;
     border-bottom: 1px black solid;
     padding-left: 35px;
     padding-bottom: 10px;
+}
+
+#addTask :hover {
+    cursor: pointer;
 }
 
 #taskList {
@@ -252,15 +256,17 @@ main {
     justify-content: center;
 }
 
-#editTask svg, #deleteTask svg {
+#editTask svg,
+#removeTask svg {
     width: 20px;
     height: 20px;
     cursor: pointer;
     margin-left: 10px;
 }
 
-/* Form windows */
-#popUpWindows {
+/* Modal Container */
+
+#modalContainer {
     position: fixed;
     z-index: 2;
     display: flex;
@@ -268,16 +274,27 @@ main {
     justify-content: center;
     height: 100%;
     width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
-#addNewProjectWindow {
+#modalContainer.hidden {
+    display: none;
+}
+
+/* Add Project Modal */
+
+#addNewProjectModal {
     width: 300px;
     background-color: #FAF7F0;
     display: grid;
-    grid-template-rows: 60px 200px;
+    grid-template-rows: 60px 120px;
     align-items: center;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.555);
+}
+
+#addNewProjectModal.hidden {
+    display: none;
 }
 
 #wrapNewProjectTitle {
@@ -309,11 +326,10 @@ main {
 }
 
 #addNewProjectForm {
-    height: 100%;
     display: grid;
     justify-content: center;
-    align-items: center;
-    grid-template-rows: 50px 50px 1fr;
+    align-items: flex-start;
+    grid-template-rows: 40px 50px;
 }
 
 #addNewProjectForm>div {
@@ -327,13 +343,17 @@ main {
     border-radius: 3px;
 }
 
-#wrapButtons {
+#wrapButtonsProject {
+    margin: auto;
+    margin-bottom: 30px;
+    height: 30px;
+    width: 200px;
     display: flex;
     justify-content: space-between;
     align-content: center;
 }
 
-#addNewProjectForm :last-child button {
+#addNewProjectModal :last-child button {
     background-color: #c8d2ff;
     border: rgba(0, 0, 0, 0.288) 1px solid;
     width: 80px;
@@ -345,10 +365,351 @@ main {
     border-radius: 5px;
 }
 
-#addNewProjectForm :last-child button:hover {
+#addNewProjectModal :last-child button:hover {
     background-color: #98A8F8;
 }
 
-.hidden {
+
+/* Delete Project Modal */
+
+#deleteProjectModal {
+    width: 350px;
+    background-color: #FAF7F0;
+    display: grid;
+    grid-template-rows: 60px 100px;
+    align-items: center;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.555);
+}
+
+#deleteProjectModal.hidden {
     display: none;
+}
+
+#wrapDeleteProjectTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #ff8080;
+    font-size: 1.4em;
+    color: rgba(0, 0, 0, 0.8);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#wrapDeleteProjectTitle button {
+    background-color: #ff8080;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 1.3em;
+    color: rgba(0, 0, 0, 0.8);
+    font-weight: bold;
+}
+
+#wrapDeleteProjectTitle button:hover {
+    background-color: #ff0000;
+    border-radius: 5px;
+}
+
+#deleteProjectMessage {
+    margin: 20px;
+    font-size: 1.2em;
+    display: grid;
+    grid-template-rows: 30px 30px;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+#wrapButtonsDeleteProject {
+    margin: auto;
+    margin-bottom: 30px;
+    height: 30px;
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+}
+
+#wrapButtonsDeleteProject button {
+    background-color: #ffffff;
+    border: rgba(0, 0, 0, 0.288) 1px solid;
+    width: 80px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: rgba(0, 0, 0, 0.8);
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#wrapButtonsDeleteProject button:hover {
+    background-color: #ff8080;
+}
+
+/* Delete Task Modal */
+
+#deleteTaskModal {
+    width: 350px;
+    background-color: #FAF7F0;
+    display: grid;
+    grid-template-rows: 60px 100px;
+    align-items: center;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.555);
+}
+
+#deleteTaskModal.hidden {
+    display: none;
+}
+
+#wrapDeleteTaskTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #ff8080;
+    font-size: 1.4em;
+    color: rgba(0, 0, 0, 0.8);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#wrapDeleteTaskTitle button {
+    background-color: #ff8080;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 1.3em;
+    color: rgba(0, 0, 0, 0.8);
+    font-weight: bold;
+}
+
+#wrapDeleteTaskTitle button:hover {
+    background-color: #ff0000;
+    border-radius: 5px;
+}
+
+#deleteTaskMessage {
+    margin: 20px;
+    font-size: 1.2em;
+    display: grid;
+    grid-template-rows: 30px 30px;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+#wrapButtonsDeleteTask {
+    margin: auto;
+    margin-bottom: 30px;
+    height: 30px;
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+}
+
+#wrapButtonsDeleteTask button {
+    background-color: #ffffff;
+    border: rgba(0, 0, 0, 0.288) 1px solid;
+    width: 80px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: rgba(0, 0, 0, 0.8);
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#wrapButtonsDeleteTask button:hover {
+    background-color: #ff8080;
+}
+
+/* Add Task Modal */
+
+#addTaskModal {
+    width: 300px;
+    background-color: #FAF7F0;
+    display: grid;
+    grid-template-rows: 60px 320px;
+    align-items: center;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.555);
+}
+
+#addTaskModal.hidden {
+    display: none;
+}
+
+#wrapAddTask {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #98A8F8;
+    font-size: 1.4em;
+    color: rgba(0, 0, 0, 0.8);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#wrapAddTask button {
+    background-color: #98A8F8;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 1.3em;
+    color: rgba(0, 0, 0, 0.8);
+    font-weight: bold;
+}
+
+#wrapAddTask button:hover {
+    background-color: #f78080;
+    border-radius: 5px;
+}
+
+#addTaskForm {
+    display: grid;
+    justify-content: center;
+    align-items: flex-start;
+    grid-template-columns: 250px;
+    grid-template-rows: 70px 70px 70px 70px;
+}
+
+#addTaskForm>div {
+    font-size: 1.2em;
+}
+
+#addTaskForm input, select {
+    margin-top: 5px;
+    padding: 0px;
+    width: 230px;
+    height: 30px;
+    border: rgba(0, 0, 0, 0.5) 1px solid;
+    border-radius: 3px;
+    background-color: #ffffff;
+}
+
+#wrapButtonsTask {
+    margin: auto;
+    margin-bottom: 30px;
+    height: 30px;
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+}
+
+#addTaskModal :last-child button {
+    background-color: #c8d2ff;
+    border: rgba(0, 0, 0, 0.288) 1px solid;
+    width: 80px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: rgba(0, 0, 0, 0.8);
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#addTaskModal :last-child button:hover {
+    background-color: #98A8F8;
+}
+
+/* Edit Task Modal */
+
+#editTaskModal {
+    width: 300px;
+    background-color: #FAF7F0;
+    display: grid;
+    grid-template-rows: 60px 320px;
+    align-items: center;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.555);
+}
+
+#editTaskModal.hidden {
+    display: none;
+}
+
+#wrapEditTask {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #98A8F8;
+    font-size: 1.4em;
+    color: rgba(0, 0, 0, 0.8);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#wrapEditTask button {
+    background-color: #98A8F8;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 1.3em;
+    color: rgba(0, 0, 0, 0.8);
+    font-weight: bold;
+}
+
+#wrapEditTask button:hover {
+    background-color: #f78080;
+    border-radius: 5px;
+}
+
+#editTaskForm {
+    display: grid;
+    justify-content: center;
+    align-items: flex-start;
+    grid-template-columns: 250px;
+    grid-template-rows: 70px 70px 70px 70px;
+}
+
+#editTaskForm>div {
+    font-size: 1.2em;
+}
+
+#editTaskForm input, select {
+    margin-top: 5px;
+    padding: 0px;
+    width: 230px;
+    height: 30px;
+    border: rgba(0, 0, 0, 0.5) 1px solid;
+    border-radius: 3px;
+    background-color: #ffffff;
+}
+
+#wrapButtonsEditTask {
+    margin: auto;
+    margin-bottom: 30px;
+    height: 30px;
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+}
+
+#editTaskModal :last-child button {
+    background-color: #c8d2ff;
+    border: rgba(0, 0, 0, 0.288) 1px solid;
+    width: 80px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: rgba(0, 0, 0, 0.8);
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+#editTaskModal :last-child button:hover {
+    background-color: #98A8F8;
 }
