@@ -30,10 +30,9 @@ header {
     grid-area: header;
 }
 
-#wrapMenu>svg {
+#wrapMenu>i {
     margin-left: 20px;
-    width: 50px;
-    height: 50px;
+    font-size: 50px;
 }
 
 #wrapMenu {
@@ -126,9 +125,8 @@ nav {
     border: none;
 }
 
-#showProject>svg {
-    width: 20px;
-    height: 20px;
+#showProject>i {
+    font-size: 20px;
     margin-left: 50px;
 }
 
@@ -145,9 +143,9 @@ nav {
     background-color: #c5c2bb48;
 }
 
-#addNewProject>svg {
-    width: 20px;
-    height: 20px;
+#addNewProject>i {
+    text-align: center;
+    font-size: 25px;
 }
 
 #projects {
@@ -170,7 +168,7 @@ nav {
     cursor: pointer;
 }
 
-#projectsList svg {
+#projectsList i {
     width: 20px;
     height: 20px;
     cursor: pointer;
@@ -229,13 +227,13 @@ main {
     cursor: pointer;
 }
 
-#taskList {
+.taskList {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-#wrapper1 {
+.wrapper1 {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -250,16 +248,15 @@ main {
     margin-right: 20px;
 }
 
-#wrapper2 {
+.wrapper2 {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-#editTask svg,
-#removeTask svg {
-    width: 20px;
-    height: 20px;
+.editTask i,
+.removeTask i {
+    font-size: 20px;
     cursor: pointer;
     margin-left: 10px;
 }
@@ -291,6 +288,11 @@ main {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.555);
 }
 
+#addTaskModal,
+#editTaskModal {
+    grid-template-rows: 60px 300px;
+}
+
 #modalContainer.hidden,
 #deleteProjectModal.hidden,
 #deleteTaskModal.hidden,
@@ -316,13 +318,23 @@ main {
 }
 
 #wrapDeleteProjectTitle,
-#wrapDeleteTaskTitle {
+#wrapDeleteTaskTitle,
+#wrapDeleteProjectTitle button,
+#wrapDeleteTaskTitle button,
+#wrapButtonsDeleteProject button:hover,
+#wrapButtonsDeleteTask button:hover {
     background-color: #ff8080;
 }
 
 #wrapAddTask,
 #wrapEditTask,
-#wrapNewProjectTitle {
+#wrapNewProjectTitle,
+#wrapAddTask button,
+#wrapEditTask button,
+#wrapNewProjectTitle button,
+#addTaskModal :last-child button:hover,
+#editTaskModal :last-child button:hover,
+#addNewProjectModal :last-child button:hover {
     background-color: #98A8F8;
 }
 
@@ -338,17 +350,8 @@ main {
     font-size: 1.3em;
     color: rgba(0, 0, 0, 0.8);
     font-weight: bold;
-}
-
-#wrapDeleteProjectTitle button,
-#wrapDeleteTaskTitle button {
-    background-color: #ff8080;
-}
-
-#wrapAddTask button,
-#wrapEditTask button,
-#wrapNewProjectTitle button {
-    background-color: #98A8F8;
+    display: flex;
+    align-items: center;
 }
 
 #wrapDeleteProjectTitle button:hover,
@@ -389,7 +392,7 @@ main {
 }
 
 #addNewProjectForm {
-    grid-template-rows: 40px 50px;
+    grid-template-rows: 30px 50px;
 }
 
 #wrapButtonsDeleteProject,
@@ -422,22 +425,11 @@ main {
     border-radius: 5px;
 }
 
-#wrapButtonsDeleteProject button:hover,
-#wrapButtonsDeleteTask button:hover {
-    background-color: #ff8080;
-}
-
-#addTaskModal :last-child button:hover,
-#editTaskModal :last-child button:hover,
-#addNewProjectModal :last-child button:hover {
-    background-color: #98A8F8;
-}
-
 #addTaskForm>div,
 #editTaskForm>div,
 #addNewProjectForm>div,
 #deleteProjectMessage,
-#deleteTaskMessage  {
+#deleteTaskMessage {
     font-size: 1.2em;
 }
 
