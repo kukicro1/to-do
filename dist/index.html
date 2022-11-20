@@ -54,22 +54,13 @@
                 <i class="fa-solid fa-plus addNewProject"></i>
             </div>
 
-            <div id="showProject" title="Show Projects">
-                <span>Projects</span>
+            <div id="showProject" class="showProject" title="Show Projects">
+                <span class="showProject">Projects</span>
                 <i class="fa-solid fa-chevron-up rotate--arrow showProject" id="collapseArrow"></i>
             </div>
 
             <div id="projects">
                 <ul id="projectsList">
-                    <li data-project-index="0">
-                        <div class="project">Project x</div>
-                        <i class="fa-regular fa-trash-can removeProject"></i>
-
-                    </li>
-                    <li>
-                        <div class="project">drek</div>
-                        <i class="fa-regular fa-trash-can removeProject"></i>
-                    </li>
                 </ul>
             </div>
 
@@ -129,11 +120,11 @@
             </div>
             <div id="deleteProjectMessage">
                 <p>Are You sure?</p>
-                <p>Project VARIJABLA will be gone forever!</p>
+                <p id="delete-project-message"></p>
             </div>
             <div id="wrapButtonsDeleteProject">
                 <button class="exit-delete-project">Cancel</button>
-                <button type="submit">Delete</button>
+                <button type="submit" class="delete-project">Delete</button>
             </div>
         </div>
 

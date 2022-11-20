@@ -32,7 +32,11 @@ export const dom = (() => {
         addNewProjectModal.classList.remove('hidden')
     }
 
-    function renderRemoveProjectModal() {
+    function renderRemoveProjectModal(e) {
+        let id = e.dataset.projectIndex
+        const message = document.querySelector('#delete-project-message')
+        const projectName = document.getElementById(id)
+        message.innerHTML = `Project <span class="boldText">${projectName.textContent}</span> will be gone forever!`
         modalContainer.classList.remove('hidden')
         deleteProjectModal.classList.remove('hidden')
     }
@@ -77,10 +81,6 @@ export const dom = (() => {
         title.textContent = 'Completed Tasks'
     }
 
-    // function renderProject() {
-    //         title.textContent = e.target.classList
-    // }
-
     function exitAddProject() {
         modalContainer.classList.toggle('hidden')
         addNewProjectModal.classList.toggle('hidden')
@@ -115,35 +115,6 @@ export const dom = (() => {
         addTaskPriorityInput.value = ''
     }
 
-    function showProjects() {
-        const addProjectButton = document.querySelector('#addProjectButton')
-        addProjectButton.addEventListener('click',)
-        projectsArray.forEach(el => {
-            const projectsList = document.querySelector('#projectsList')
-            const projectInList = document.createElement('li')
-            const projectNameContainer = document.createElement('div')
-            const projectTrash = document.createElement('i')
-            const e = projectsArray.indexOf(el)
-            projectsList.append(projectInList)
-            projectInList.append(projectNameContainer)
-            projectInList.append(projectTrash)
-            projectNameContainer.textContent = projectsArray[e].name
-            projectInList.dataset.dataProjectIndex = e
-            projectTrash.setAttribute('data-project-index', e)
-            projectNameContainer.classList = 'project'
-            projectTrash.classList = 'fa-regular fa-trash-can removeProject'
-        })
-    }
-
-    function preventEnter() {
-        const addNewProjectForm = document.querySelector('#addNewProjectForm')
-        addNewProjectForm.addEventListener('keypress', (e) => {
-            if (e.keyCode === 13) {
-                e.preventDefault();
-                return false;
-            }
-        })
-    }
 
     function eventHandler() {
         document.addEventListener('click', (event) => {
@@ -151,8 +122,9 @@ export const dom = (() => {
             if (target.classList.contains('addNewProject')) {
                 renderAddProjectModal()
             }
+
             else if (target.classList.contains('removeProject')) {
-                renderRemoveProjectModal()
+                renderRemoveProjectModal(target)
             }
             else if (target.classList.contains('removeTask')) {
                 renderRemoveTaskModal()
@@ -193,14 +165,77 @@ export const dom = (() => {
             else if (target.classList.contains('completedButton')) {
                 renderCompletedTasks()
             }
-            // else if(target.classList.contains('xxxxx')){
-            //     renderProject()
-            // }
+            else if (target.classList.contains('project')) {
+                title.textContent = target.textContent
+            }
+            else if (target.id === 'addProjectButton') {
+                Projects.manageAddProjectModal()
+                showProjectInList()
+            }
+            else if (target.classList.contains('delete-project')) {
+                //Ne može biti target kad je button koji nema dataset!!!!!!
+                Projects.deleteProjectFromArray(target.dataset.projectIndex)
+                console.log(Projects.projectsArray)
+                deleteProjectFromList(target)
+            }
         })
+    }
+
+    function showProjectInList() {
+        const projectInList = document.createElement('li')
+        const projectsList = document.querySelector('#projectsList')
+        const projectNameContainer = document.createElement('div')
+        const projectTrash = document.createElement('i')
+        let arrayOfProjectObjects = Projects.projectsArray
+        arrayOfProjectObjects.forEach(el => {
+            const e = arrayOfProjectObjects.indexOf(el)
+            projectNameContainer.textContent = arrayOfProjectObjects[e].name
+            projectInList.dataset.projectIndex = e
+            projectTrash.setAttribute('data-project-index', e)
+            projectNameContainer.id = e
+            projectNameContainer.classList = 'project'
+            projectTrash.classList = 'fa-regular fa-trash-can removeProject'
+            if (e === 0) {
+                return (
+                    projectsList.append(projectInList),
+                    projectInList.append(projectNameContainer),
+                    projectInList.append(projectTrash)
+                )
+            }
+            else if (e >= 0) {
+                return (
+                    projectsList.append(projectInList),
+                    projectInList.append(projectNameContainer),
+                    projectInList.append(projectTrash)
+                )
+            }
+        })
+    }
+
+    function deleteProjectFromList(e) {
+        let id = e.dataset.projectIndex
+        console.log(id)
+        const projectContainer = document.querySelector(`li[data-project-index='${id}']`)
+        console.log(projectContainer)
+        modalContainer.classList.toggle('hidden')
+        deleteProjectModal.classList.toggle('hidden')
+        newProjectInput.value = ''
+        
     }
 
     return {
         resetPage,
         eventHandler
     }
+})()
+
+
+const preventEnter = (() => {
+    const addNewProjectForm = document.querySelector('#addNewProjectForm')
+    addNewProjectForm.addEventListener('keypress', (e) => {
+        if (e.keyCode === 13) {
+            e.preventDefault();
+            return false;
+        }
+    })
 })()

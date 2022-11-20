@@ -5,6 +5,4 @@ import '../css/reset.css'
 import '../css/styles.css'
 
 
-dom.resetPage()
-
 dom.eventHandler()

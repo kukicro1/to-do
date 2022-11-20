@@ -14,23 +14,25 @@ export const Projects = (() => {
     function addProjectToArray() {
         const project = new Project()
         project.name = newProjectInput.value
-        projectsArray.push(project.name)
-        console.log(projectsArray)
+        projectsArray.push(project)
     }
- // if (newProjectInput.value === '') {
-        //     alert('Please enter project name.')
-        // }
-        // else {
-        // addNewProjectForm.reset()
-        // modalContainer.classList.toggle('hidden')
-        // addNewProjectModal.classList.toggle('hidden')
-        // newProjectInput.value = ''
-        // }
-        // displayProject()
-        // }
-        
-    function deleteProject() {
 
+    function manageAddProjectModal () {
+        if (newProjectInput.value === '') {
+            alert('Please enter project name.')
+        }
+        else {
+            addProjectToArray()
+            console.log(projectsArray)
+            addNewProjectForm.reset()
+            modalContainer.classList.toggle('hidden')
+            addNewProjectModal.classList.toggle('hidden')
+            newProjectInput.value = ''
+        }
+    }
+
+    function deleteProjectFromArray(e) {
+        projectsArray.splice(e, 1)
     }
 
     function saveProject() {
@@ -39,8 +41,8 @@ export const Projects = (() => {
 
     return {
         projectsArray,
-        addProjectToArray,
-        deleteProject,
+        manageAddProjectModal,
+        deleteProjectFromArray,
         saveProject
     }
 })()
