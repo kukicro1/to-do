@@ -36,7 +36,7 @@ export const dom = (() => {
         let id = e.dataset.projectIndex
         const message = document.querySelector('#delete-project-message')
         const projectName = document.getElementById(id)
-        message.innerHTML = `Project <span class="boldText">${projectName.textContent}</span> will be gone forever!`
+        message.innerHTML = `Project <span class="boldText projectSelectedForRemove" data-project-index="${id}">${projectName.textContent}</span> will be gone forever!`
         modalContainer.classList.remove('hidden')
         deleteProjectModal.classList.remove('hidden')
     }
@@ -115,14 +115,12 @@ export const dom = (() => {
         addTaskPriorityInput.value = ''
     }
 
-
     function eventHandler() {
         document.addEventListener('click', (event) => {
             const { target } = event
             if (target.classList.contains('addNewProject')) {
                 renderAddProjectModal()
             }
-
             else if (target.classList.contains('removeProject')) {
                 renderRemoveProjectModal(target)
             }
@@ -170,57 +168,45 @@ export const dom = (() => {
             }
             else if (target.id === 'addProjectButton') {
                 Projects.manageAddProjectModal()
-                showProjectInList()
+                updateProjectInList()
             }
             else if (target.classList.contains('delete-project')) {
-                //Ne može biti target kad je button koji nema dataset!!!!!!
-                Projects.deleteProjectFromArray(target.dataset.projectIndex)
-                console.log(Projects.projectsArray)
-                deleteProjectFromList(target)
+                Projects.deleteProjectFromArray()
+                deleteProjectFromList()
+                updateProjectInList()
             }
         })
     }
 
-    function showProjectInList() {
-        const projectInList = document.createElement('li')
+    function updateProjectInList() {
         const projectsList = document.querySelector('#projectsList')
-        const projectNameContainer = document.createElement('div')
-        const projectTrash = document.createElement('i')
+        projectsList.textContent = ''
         let arrayOfProjectObjects = Projects.projectsArray
         arrayOfProjectObjects.forEach(el => {
+            const projectInList = document.createElement('li')
+            const projectNameContainer = document.createElement('div')
+            const projectTrash = document.createElement('i')
             const e = arrayOfProjectObjects.indexOf(el)
+            projectsList.append(projectInList)
+            projectInList.append(projectNameContainer)
+            projectInList.append(projectTrash)
             projectNameContainer.textContent = arrayOfProjectObjects[e].name
             projectInList.dataset.projectIndex = e
             projectTrash.setAttribute('data-project-index', e)
             projectNameContainer.id = e
             projectNameContainer.classList = 'project'
             projectTrash.classList = 'fa-regular fa-trash-can removeProject'
-            if (e === 0) {
-                return (
-                    projectsList.append(projectInList),
-                    projectInList.append(projectNameContainer),
-                    projectInList.append(projectTrash)
-                )
-            }
-            else if (e >= 0) {
-                return (
-                    projectsList.append(projectInList),
-                    projectInList.append(projectNameContainer),
-                    projectInList.append(projectTrash)
-                )
-            }
         })
     }
 
-    function deleteProjectFromList(e) {
-        let id = e.dataset.projectIndex
-        console.log(id)
-        const projectContainer = document.querySelector(`li[data-project-index='${id}']`)
-        console.log(projectContainer)
+    function deleteProjectFromList() {
+        const selectedProjectForRemove = document.querySelector('.projectSelectedForRemove')
+        let e = selectedProjectForRemove.dataset.projectIndex
+        let projectContainer = document.querySelector(`li[data-project-index="${e}"]`)
+        projectContainer.remove()
         modalContainer.classList.toggle('hidden')
         deleteProjectModal.classList.toggle('hidden')
         newProjectInput.value = ''
-        
     }
 
     return {
@@ -228,7 +214,6 @@ export const dom = (() => {
         eventHandler
     }
 })()
-
 
 const preventEnter = (() => {
     const addNewProjectForm = document.querySelector('#addNewProjectForm')

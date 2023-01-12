@@ -14,7 +14,7 @@ export const Projects = (() => {
     function addProjectToArray() {
         const project = new Project()
         project.name = newProjectInput.value
-        projectsArray.push(project)
+        projectsArray.push(project)        
     }
 
     function manageAddProjectModal () {
@@ -23,7 +23,6 @@ export const Projects = (() => {
         }
         else {
             addProjectToArray()
-            console.log(projectsArray)
             addNewProjectForm.reset()
             modalContainer.classList.toggle('hidden')
             addNewProjectModal.classList.toggle('hidden')
@@ -31,7 +30,9 @@ export const Projects = (() => {
         }
     }
 
-    function deleteProjectFromArray(e) {
+    function deleteProjectFromArray() {
+        const selectedProjectForRemove = document.querySelector('.projectSelectedForRemove')
+        let e = selectedProjectForRemove.dataset.projectIndex
         projectsArray.splice(e, 1)
     }
 
