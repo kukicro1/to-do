@@ -1,4 +1,5 @@
 import { Projects } from "./project"
+import { Tasks } from "./task"
 
 export const dom = (() => {
 
@@ -22,10 +23,6 @@ export const dom = (() => {
     const editTaskDescriptionInput = document.querySelector('#editTaskDescriptionInput')
     const editTaskDateInput = document.querySelector('#editTaskDateInput')
     const editTaskPriorityInput = document.querySelector('#editTaskPriorityInput')
-
-    function resetPage() {
-
-    }
 
     function renderAddProjectModal() {
         modalContainer.classList.remove('hidden')
@@ -167,7 +164,7 @@ export const dom = (() => {
                 title.textContent = target.textContent
             }
             else if (target.id === 'addProjectButton') {
-                Projects.manageAddProjectModal()
+                manageAddProjectModal()
                 updateProjectInList()
             }
             else if (target.classList.contains('delete-project')) {
@@ -175,7 +172,72 @@ export const dom = (() => {
                 deleteProjectFromList()
                 updateProjectInList()
             }
+            else if (target.id === 'addTask') {
+                manageAddTaskModal()
+                console.log()
+                console.log(Projects.projectsArray)
+            }
         })
+    }
+
+    function updateTaskInProject() {
+        const wrapTasksList = document.querySelector('#wrapTask')
+        const wrapTask = document.createElement('div')
+        wrapTask.classList = 'taskList'
+        const wrapper1 = document.createElement('div')
+        wrapper1.classList = 'wrapper1'
+        wrapper1.setAttribute('title', 'Open Task')
+        const checkTask = document.createElement('input')
+        const wrapTaskName = document.createElement('div')
+        checkTask.classList = 'checkTask'
+        checkTask.setAttribute('type', 'checkbox')
+        checkTask.setAttribute('title', 'Mark as completed')
+        wrapTaskName.classList = 'taskName'
+
+        const wrapper2 = document.createElement('div')
+        wrapper2.classList = 'wrapper2'
+        const wrapTaskDate = document.createElement('div')
+        wrapTaskDate.classList = 'taskDate'
+        const wrapEditTask = document.createElement('div')
+        wrapEditTask.classList = 'editTask'
+        wrapEditTask.setAttribute('title', 'Edit Task')
+        const editTaskIcon = document.createElement('i')
+        editTaskIcon.classList = 'fa-regular fa-pen-to-square editTask'
+        const wrapRemoveTask = document.createElement('div')
+        wrapRemoveTask.classList = 'removeTask'
+        wrapRemoveTask.setAttribute('title', 'Remove Task')
+        const removeTaskIcon = document.createElement('i')
+        removeTaskIcon.classList = 'fa-regular fa-trash-can removeTask'
+
+        wrapTasksList.append(wrapTask)
+        wrapTask.append(wrapper1, wrapper2)
+        wrapper1.append(checkTask, wrapTaskName)
+        wrapper2.append(wrapTaskDate, wrapEditTask, wrapRemoveTask)
+        wrapEditTask.append(editTaskIcon)
+        wrapRemoveTask.append(removeTaskIcon)
+
+        wrapTaskName.textContent = addTaskTitleInput.value
+        wrapTaskDate.textContent = addTaskDateInput.value
+        
+        modalContainer.classList.toggle('hidden')
+        addTaskModal.classList.toggle('hidden')
+        addTaskTitleInput.value = ''
+        addTaskDescriptionInput.value = ''
+        addTaskDateInput.value = ''
+        addTaskPriorityInput.value = ''
+    }
+
+    function manageAddTaskModal() {
+        if (addTaskTitleInput.value === '' ||
+            addTaskDescriptionInput.value === '' ||
+            addTaskDateInput.value === '' ||
+            addTaskPriorityInput.value === '') {
+            alert('Please fill in empty slots.')
+        }
+        else {
+            Tasks.addTaskToProject()
+            updateTaskInProject()
+        }
     }
 
     function updateProjectInList() {
@@ -199,6 +261,18 @@ export const dom = (() => {
         })
     }
 
+    function manageAddProjectModal() {
+        if (newProjectInput.value === '') {
+            alert('Please enter project name.')
+        }
+        else {
+            Projects.addProjectToArray()
+            modalContainer.classList.toggle('hidden')
+            addNewProjectModal.classList.toggle('hidden')
+            newProjectInput.value = ''
+        }
+    }
+
     function deleteProjectFromList() {
         const selectedProjectForRemove = document.querySelector('.projectSelectedForRemove')
         let e = selectedProjectForRemove.dataset.projectIndex
@@ -210,7 +284,6 @@ export const dom = (() => {
     }
 
     return {
-        resetPage,
         eventHandler
     }
 })()

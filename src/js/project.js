@@ -1,33 +1,23 @@
 import { dom } from "./DOM"
+import { Tasks } from "./task"
 
 export const Projects = (() => {
 
     const projectsArray = []
 
     class Project {
-        constructor(name) {
+        constructor(name, tasks) {
             this.name = name
-            this.tasks = []
+            this.tasks = tasks
         }
     }
 
     function addProjectToArray() {
         const project = new Project()
         project.name = newProjectInput.value
-        projectsArray.push(project)        
-    }
-
-    function manageAddProjectModal () {
-        if (newProjectInput.value === '') {
-            alert('Please enter project name.')
-        }
-        else {
-            addProjectToArray()
-            addNewProjectForm.reset()
-            modalContainer.classList.toggle('hidden')
-            addNewProjectModal.classList.toggle('hidden')
-            newProjectInput.value = ''
-        }
+        project.tasks = Tasks.taskArray
+        projectsArray.push(project)
+        console.log(projectsArray)
     }
 
     function deleteProjectFromArray() {
@@ -42,8 +32,7 @@ export const Projects = (() => {
 
     return {
         projectsArray,
-        manageAddProjectModal,
         deleteProjectFromArray,
-        saveProject
+        addProjectToArray
     }
 })()
