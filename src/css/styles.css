@@ -187,7 +187,7 @@ main {
     grid-area: main;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 100px 1fr;
+    grid-template-rows: 100px 70px 1fr;
     justify-content: center;
     align-items: center;
     padding-left: 30px;
@@ -210,7 +210,6 @@ main {
     width: 100%;
     min-width: 300px;
     max-width: 800px;
-    padding: 30px;
 }
 
 #taskInfo {
@@ -458,4 +457,8 @@ select {
 
 #addNewProjectForm input {
     width: 200px;
+}
+
+#delete-task-message {
+    font-weight: bold;
 }

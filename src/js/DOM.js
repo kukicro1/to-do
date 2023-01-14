@@ -38,7 +38,14 @@ export const dom = (() => {
         deleteProjectModal.classList.remove('hidden')
     }
 
-    function renderRemoveTaskModal() {
+    function renderRemoveTaskModal(e) {
+        let id = e.dataset.taskIndex
+        let n = e.dataset.projectIndex
+        const deleteTaskSpan = document.querySelector("#delete-task-message")
+        const taskName = document.getElementById(`task-${id}`)
+        deleteTaskSpan.textContent = taskName.textContent
+        deleteTaskSpan.setAttribute('data-task-index', id)
+        deleteTaskSpan.setAttribute('data-project-index', n)
         modalContainer.classList.remove('hidden')
         deleteTaskModal.classList.remove('hidden')
     }
@@ -122,7 +129,7 @@ export const dom = (() => {
                 renderRemoveProjectModal(target)
             }
             else if (target.classList.contains('removeTask')) {
-                renderRemoveTaskModal()
+                renderRemoveTaskModal(target)
             }
             else if (target.classList.contains('addTask')) {
                 renderAddTaskModal()
@@ -161,7 +168,7 @@ export const dom = (() => {
                 renderCompletedTasks()
             }
             else if (target.classList.contains('project')) {
-                title.textContent = target.textContent
+                renderTaskList(target)
             }
             else if (target.id === 'addProjectButton') {
                 manageAddProjectModal()
@@ -174,57 +181,81 @@ export const dom = (() => {
             }
             else if (target.id === 'addTask') {
                 manageAddTaskModal()
-                console.log()
                 console.log(Projects.projectsArray)
+            }
+            else if (target.classList.contains('delete-task')) {
+                Tasks.deleteTask()
+                deleteTaskFromList()
             }
         })
     }
 
+    function renderTaskList(t) {
+        let e = t.id
+        title.textContent = t.textContent
+        title.dataset.projectIndex = e
+        updateTaskInProject()
+    }
+
     function updateTaskInProject() {
-        const wrapTasksList = document.querySelector('#wrapTask')
-        const wrapTask = document.createElement('div')
-        wrapTask.classList = 'taskList'
-        const wrapper1 = document.createElement('div')
-        wrapper1.classList = 'wrapper1'
-        wrapper1.setAttribute('title', 'Open Task')
-        const checkTask = document.createElement('input')
-        const wrapTaskName = document.createElement('div')
-        checkTask.classList = 'checkTask'
-        checkTask.setAttribute('type', 'checkbox')
-        checkTask.setAttribute('title', 'Mark as completed')
-        wrapTaskName.classList = 'taskName'
+        const wrapTask = document.querySelector('#wrapTask')
+        wrapTask.textContent = ''
+        let e = title.dataset.projectIndex
+        let arrayOfTasksInProject = Projects.projectsArray[e].tasks
+        arrayOfTasksInProject.forEach(el => {
+            // console.log(Tasks.taskArray.length)
+            let i = arrayOfTasksInProject.indexOf(el)
+            const wrapEachTask = document.createElement('div')
+            wrapEachTask.classList = 'taskList'
+            const wrapper1 = document.createElement('div')
+            wrapper1.classList = 'wrapper1'
+            wrapper1.setAttribute('title', 'Open Task')
+            const checkTask = document.createElement('input')
+            const wrapTaskName = document.createElement('div')
+            checkTask.classList = 'checkTask'
+            checkTask.setAttribute('type', 'checkbox')
+            checkTask.setAttribute('title', 'Mark as completed')
+            wrapTaskName.classList = 'taskName'
+            wrapTaskName.id = `task-${i}`
+            const wrapper2 = document.createElement('div')
+            wrapper2.classList = 'wrapper2'
+            const wrapTaskDate = document.createElement('div')
+            wrapTaskDate.classList = 'taskDate'
+            const wrapEditTask = document.createElement('div')
+            wrapEditTask.classList = 'editTask'
+            wrapEditTask.setAttribute('title', 'Edit Task')
+            const editTaskIcon = document.createElement('i')
+            editTaskIcon.classList = 'fa-regular fa-pen-to-square editTask'
+            const wrapRemoveTask = document.createElement('div')
+            wrapRemoveTask.classList = 'removeTask'
+            wrapRemoveTask.setAttribute('title', 'Remove Task')
+            const removeTaskIcon = document.createElement('i')
+            removeTaskIcon.classList = 'fa-regular fa-trash-can removeTask'
+            wrapTask.append(wrapEachTask)
+            wrapEachTask.append(wrapper1, wrapper2)
+            wrapper1.append(checkTask, wrapTaskName)
+            wrapper2.append(wrapTaskDate, wrapEditTask, wrapRemoveTask)
+            wrapEditTask.append(editTaskIcon)
+            wrapRemoveTask.append(removeTaskIcon)
+            wrapTaskName.textContent = el.title
+            wrapTaskDate.textContent = el.dueDate
+            removeTaskIcon.setAttribute('data-project-index', e)
+            removeTaskIcon.setAttribute('data-task-index', i)
+            // removeTaskIcon.setAttribute('data-taskArray-index', 1)
+            wrapEachTask.setAttribute('data-task-index', i)
+        })
 
-        const wrapper2 = document.createElement('div')
-        wrapper2.classList = 'wrapper2'
-        const wrapTaskDate = document.createElement('div')
-        wrapTaskDate.classList = 'taskDate'
-        const wrapEditTask = document.createElement('div')
-        wrapEditTask.classList = 'editTask'
-        wrapEditTask.setAttribute('title', 'Edit Task')
-        const editTaskIcon = document.createElement('i')
-        editTaskIcon.classList = 'fa-regular fa-pen-to-square editTask'
-        const wrapRemoveTask = document.createElement('div')
-        wrapRemoveTask.classList = 'removeTask'
-        wrapRemoveTask.setAttribute('title', 'Remove Task')
-        const removeTaskIcon = document.createElement('i')
-        removeTaskIcon.classList = 'fa-regular fa-trash-can removeTask'
+    }
 
-        wrapTasksList.append(wrapTask)
-        wrapTask.append(wrapper1, wrapper2)
-        wrapper1.append(checkTask, wrapTaskName)
-        wrapper2.append(wrapTaskDate, wrapEditTask, wrapRemoveTask)
-        wrapEditTask.append(editTaskIcon)
-        wrapRemoveTask.append(removeTaskIcon)
-
-        wrapTaskName.textContent = addTaskTitleInput.value
-        wrapTaskDate.textContent = addTaskDateInput.value
-        
+    function deleteTaskFromList() {
+        updateTaskInProject()
         modalContainer.classList.toggle('hidden')
-        addTaskModal.classList.toggle('hidden')
-        addTaskTitleInput.value = ''
-        addTaskDescriptionInput.value = ''
-        addTaskDateInput.value = ''
-        addTaskPriorityInput.value = ''
+        deleteTaskModal.classList.toggle('hidden')
+        newProjectInput.value = ''
+    }
+
+    function resetTaskList() {
+
     }
 
     function manageAddTaskModal() {
@@ -236,7 +267,14 @@ export const dom = (() => {
         }
         else {
             Tasks.addTaskToProject()
+            // Projects.addTaskToExactProject()
             updateTaskInProject()
+            modalContainer.classList.toggle('hidden')
+            addTaskModal.classList.toggle('hidden')
+            addTaskTitleInput.value = ''
+            addTaskDescriptionInput.value = ''
+            addTaskDateInput.value = ''
+            addTaskPriorityInput.value = ''
         }
     }
 
@@ -252,7 +290,7 @@ export const dom = (() => {
             projectsList.append(projectInList)
             projectInList.append(projectNameContainer)
             projectInList.append(projectTrash)
-            projectNameContainer.textContent = arrayOfProjectObjects[e].name
+            projectNameContainer.textContent = el.name
             projectInList.dataset.projectIndex = e
             projectTrash.setAttribute('data-project-index', e)
             projectNameContainer.id = e
@@ -281,6 +319,11 @@ export const dom = (() => {
         modalContainer.classList.toggle('hidden')
         deleteProjectModal.classList.toggle('hidden')
         newProjectInput.value = ''
+    }
+
+    function resetPage() {
+        const wrapTasksList = document.querySelector('#wrapTask')
+
     }
 
     return {
