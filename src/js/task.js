@@ -3,8 +3,6 @@ import { Projects } from "./project";
 
 export const Tasks = (() => {
 
-    // const taskArray = []
-
     class Task {
         constructor(title, description, dueDate, priority, status) {
             this.title = title
@@ -23,26 +21,20 @@ export const Tasks = (() => {
         task.priority = addTaskPriorityInput.value
         task.status = false
         const title = document.querySelector('#title')
-        let e = title.dataset.projectIndex
-        Projects.projectsArray[e].tasks.push(task)
-        // taskArray.push(task)
-        // console.log(taskArray)
+        let projectIndex = title.dataset.projectIndex
+        Projects.projectsArray[projectIndex].tasks.push(task)
     }
 
     function deleteTask() {
         const taskSelectedForDeletion = document.querySelector('#delete-task-message')
-        let e = taskSelectedForDeletion.dataset.taskIndex
-        let n = taskSelectedForDeletion.dataset.projectIndex
-        let taskInProjectArray = Projects.projectsArray[n].tasks
-        // taskArray.splice(e, 1)
-        taskInProjectArray.splice(e, 1)
-        // console.log(taskArray)
+        let taskIndex = taskSelectedForDeletion.dataset.taskIndex
+        let projectIndex = taskSelectedForDeletion.dataset.projectIndex
+        let taskInProjectArray = Projects.projectsArray[projectIndex].tasks
+        taskInProjectArray.splice(taskIndex, 1)
         console.log(Projects.projectsArray)
     }
 
     return {
-        // taskArray,
-        
         addTaskToProject,
         deleteTask
     }

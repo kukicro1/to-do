@@ -20,13 +20,6 @@ export const Projects = (() => {
         console.log(projectsArray)
     }
 
-    // function addTaskToExactProject() {
-    //     const title = document.querySelector('#title')
-    //     let e = title.dataset.projectIndex
-    //     projectsArray[e].tasks.push(Tasks.Task)
-    //         // taskArray[Tasks.taskArray.length-1])
-    // }
-
     function deleteProjectFromArray() {
         const selectedProjectForRemove = document.querySelector('.projectSelectedForRemove')
         let e = selectedProjectForRemove.dataset.projectIndex
@@ -41,6 +34,5 @@ export const Projects = (() => {
         projectsArray,
         deleteProjectFromArray,
         addProjectToArray,
-        // addTaskToExactProject
     }
 })()
