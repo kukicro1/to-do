@@ -1,5 +1,6 @@
 import { Projects } from "./project"
 import { Tasks } from "./task"
+import format from "date-fns/format"
 
 export const dom = (() => {
 
@@ -72,6 +73,8 @@ export const dom = (() => {
 
     function renderToday() {
         // resetPage()
+        // updateTaskInToday()
+        Tasks.checkDate()
         title.textContent = 'Today'
     }
 
@@ -208,8 +211,8 @@ export const dom = (() => {
         resetTaskList()
         let projectIndex = title.dataset.projectIndex
         let arrayOfTasksInProject = Projects.projectsArray[projectIndex].tasks
-        arrayOfTasksInProject.forEach(el => {
-            let taskIndex = arrayOfTasksInProject.indexOf(el)
+        arrayOfTasksInProject.forEach(task => {
+            let taskIndex = arrayOfTasksInProject.indexOf(task)
             const wrapEachTask = document.createElement('div')
             wrapEachTask.classList = 'taskList'
             const wrapper1 = document.createElement('div')
@@ -242,13 +245,12 @@ export const dom = (() => {
             wrapper2.append(wrapTaskDate, wrapEditTask, wrapRemoveTask)
             wrapEditTask.append(editTaskIcon)
             wrapRemoveTask.append(removeTaskIcon)
-            wrapTaskName.textContent = el.title
-            wrapTaskDate.textContent = el.dueDate
+            wrapTaskName.textContent = task.title
+            wrapTaskDate.textContent = task.dueDate
             removeTaskIcon.setAttribute('data-project-index', projectIndex)
             removeTaskIcon.setAttribute('data-task-index', taskIndex)
             wrapEachTask.setAttribute('data-task-index', taskIndex)
         })
-
     }
 
     function deleteTaskFromList() {
@@ -281,15 +283,15 @@ export const dom = (() => {
         const projectsList = document.querySelector('#projectsList')
         projectsList.textContent = ''
         let arrayOfProjectObjects = Projects.projectsArray
-        arrayOfProjectObjects.forEach(el => {
+        arrayOfProjectObjects.forEach(project => {
             const projectInList = document.createElement('li')
             const projectNameContainer = document.createElement('div')
             const projectTrash = document.createElement('i')
-            const projectIndex = arrayOfProjectObjects.indexOf(el)
+            const projectIndex = arrayOfProjectObjects.indexOf(project)
             projectsList.append(projectInList)
             projectInList.append(projectNameContainer)
             projectInList.append(projectTrash)
-            projectNameContainer.textContent = el.name
+            projectNameContainer.textContent = project.name
             projectInList.dataset.projectIndex = projectIndex
             projectTrash.setAttribute('data-project-index', projectIndex)
             projectNameContainer.id = projectIndex
@@ -321,7 +323,8 @@ export const dom = (() => {
     }
 
     return {
-        eventHandler
+        eventHandler,
+        updateTaskInProject
     }
 })()
 

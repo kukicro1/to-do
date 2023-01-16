@@ -1,5 +1,6 @@
 import { dom } from "./DOM"
 import { Tasks } from "./task"
+import format from "date-fns/format"
 
 export const Projects = (() => {
 
@@ -26,13 +27,9 @@ export const Projects = (() => {
         projectsArray.splice(e, 1)
     }
 
-    function deleteTaskInProject() {
-
-    }
-
     return {
         projectsArray,
         deleteProjectFromArray,
-        addProjectToArray,
+        addProjectToArray
     }
 })()
