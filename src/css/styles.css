@@ -159,18 +159,35 @@ nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border: 2px solid #6d6d6d;
+    border-radius: 5px;
+    padding: 5px;
     margin: 10px;
+    height: 30px;
     width: 150px;
-}
-
-#projects li div:hover {
-    font-weight: bold;
     cursor: pointer;
 }
 
-#projectsList i {
+#projects .selected {
+    background-color: #ccd3f5;
+    border: 2px solid #98A8F8;
+    font-weight: bold;
+}
+
+#projects li:hover {
+    border: 2px solid #98A8F8;
+    font-weight: bold;
+}
+
+#listOfProjects i {
     width: 20px;
     height: 20px;
+    cursor: pointer;
+}
+
+#listOfProjects i:hover {
+    width: 22px;
+    height: 22px;
     cursor: pointer;
 }
 

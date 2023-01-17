@@ -171,6 +171,9 @@ export const dom = (() => {
                 renderCompletedTasks()
             }
             else if (target.classList.contains('project')) {
+                const projectList = document.querySelectorAll('li.project')
+                const projectNameContainer = document.querySelectorAll('div.project')
+                selectField(target, projectList, projectNameContainer)
                 renderTaskList(target)
             }
             else if (target.id === 'addProjectButton') {
@@ -186,7 +189,6 @@ export const dom = (() => {
             }
             else if (target.id === 'addTask') {
                 manageAddTaskModal()
-                console.log(Projects.projectsArray)
             }
             else if (target.classList.contains('delete-task')) {
                 Tasks.deleteTask()
@@ -195,10 +197,33 @@ export const dom = (() => {
         })
     }
 
+    function selectField(target, projectList, projectNameContainer) {
+        const listArray = Array.from(projectList)
+        const containerArray = Array.from(projectNameContainer)
+        listArray.forEach(list => {
+            if (target.classList === list.classList) {
+                listArray.forEach(listedElement => {
+                    listedElement.classList = 'project'
+                })
+                list.classList.add('selected')
+            }
+        })
+        containerArray.forEach(container => {
+            const containerCounter = containerArray.indexOf(container)
+                if (target.classList === container.classList) {
+                    listArray.forEach(listedElement => {
+                        listedElement.classList = 'project'
+                    })
+                    listArray[containerCounter].classList.add('selected')
+                } 
+        })
+    }
+
     function renderTaskList(target) {
-        let projectId = target.id
+        // let projectId = target.id
+        // title.dataset.projectIndex = projectId
+        // target.classList.toggle('selected')
         title.textContent = target.textContent
-        title.dataset.projectIndex = projectId
         updateTaskInProject()
     }
 
@@ -253,13 +278,6 @@ export const dom = (() => {
         })
     }
 
-    function deleteTaskFromList() {
-        updateTaskInProject()
-        modalContainer.classList.toggle('hidden')
-        deleteTaskModal.classList.toggle('hidden')
-        newProjectInput.value = ''
-    }
-
     function manageAddTaskModal() {
         if (addTaskTitleInput.value === '' ||
             addTaskDescriptionInput.value === '' ||
@@ -279,23 +297,30 @@ export const dom = (() => {
         }
     }
 
+    function deleteTaskFromList() {
+        updateTaskInProject()
+        modalContainer.classList.toggle('hidden')
+        deleteTaskModal.classList.toggle('hidden')
+        newProjectInput.value = ''
+    }
+
     function updateProjectInList() {
-        const projectsList = document.querySelector('#projectsList')
-        projectsList.textContent = ''
+        const listOfProjects = document.querySelector('#listOfProjects')
+        listOfProjects.textContent = ''
         let arrayOfProjectObjects = Projects.projectsArray
         arrayOfProjectObjects.forEach(project => {
-            const projectInList = document.createElement('li')
+            const projectList = document.createElement('li')
             const projectNameContainer = document.createElement('div')
             const projectTrash = document.createElement('i')
             const projectIndex = arrayOfProjectObjects.indexOf(project)
-            projectsList.append(projectInList)
-            projectInList.append(projectNameContainer)
-            projectInList.append(projectTrash)
+            listOfProjects.append(projectList)
+            projectList.append(projectNameContainer, projectTrash)
+            projectList.dataset.projectIndex = projectIndex
+            projectList.classList = 'project'
             projectNameContainer.textContent = project.name
-            projectInList.dataset.projectIndex = projectIndex
-            projectTrash.setAttribute('data-project-index', projectIndex)
             projectNameContainer.id = projectIndex
             projectNameContainer.classList = 'project'
+            projectTrash.setAttribute('data-project-index', projectIndex)
             projectTrash.classList = 'fa-regular fa-trash-can removeProject'
         })
     }
@@ -324,7 +349,7 @@ export const dom = (() => {
 
     return {
         eventHandler,
-        updateTaskInProject
+        updateTaskInProject,
     }
 })()
 

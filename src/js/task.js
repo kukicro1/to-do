@@ -12,12 +12,10 @@ export const Tasks = (() => {
             this.dueDate = dueDate
             this.priority = priority
             this.status = status
-            // this.projectIndex = projectIndex
-            // this.taskIndex = taskIndex
+            this.projectIndex = projectIndex
+            this.taskIndex = taskIndex
         }
     }
-
-    // const todayArray = []
 
     function addTaskToProject() {
         const task = new Task()
@@ -26,7 +24,8 @@ export const Tasks = (() => {
         task.dueDate = addTaskDateInput.value
         task.priority = addTaskPriorityInput.value
         task.status = false
-
+        task.projectIndex = ''
+        task.taskIndex = ''
         const title = document.querySelector('#title')
         let projectIndex = title.dataset.projectIndex
         Projects.projectsArray[projectIndex].tasks.push(task)
@@ -57,7 +56,6 @@ export const Tasks = (() => {
     }
 
     return {
-        // todayArray,
         addTaskToProject,
         deleteTask,
         checkDate
