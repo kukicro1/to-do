@@ -26,8 +26,8 @@ export const Tasks = (() => {
         task.status = false
         task.projectIndex = ''
         task.taskIndex = ''
-        const title = document.querySelector('#title')
-        let projectIndex = title.dataset.projectIndex
+        const selectedProject = document.querySelector('.selected')
+        let projectIndex = selectedProject.dataset.projectIndex
         Projects.projectsArray[projectIndex].tasks.push(task)
     }
 

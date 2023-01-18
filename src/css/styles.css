@@ -84,7 +84,9 @@ nav {
 
 .wrapGeneral:hover,
 #addNewProject:hover {
-    background-color: #ccd3f5;
+    /* background-color: #ccd3f5; */
+    font-weight: bold;
+    box-shadow: inset 0px 0px 0px 2px #98A8F8, inset 0px 0px 0px 2px #98A8F8, inset 0px 0px 0px 2px #98A8F8, inset 0px 0px 0px 2px #98A8F8;
 }
 
 .wrapGeneral>svg {
@@ -96,6 +98,12 @@ nav {
     width: 140px;
     display: flex;
     justify-content: start;
+}
+
+#wrapGeneral .selected{
+    background-color: #ccd3f5;
+    box-shadow: inset 0px 0px 0px 2px #98A8F8, inset 0px 0px 0px 2px #98A8F8, inset 0px 0px 0px 2px #98A8F8, inset 0px 0px 0px 2px #98A8F8;
+    font-weight: bold;
 }
 
 #wrapProjects {

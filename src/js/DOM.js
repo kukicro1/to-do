@@ -9,6 +9,9 @@ export const dom = (() => {
     const projects = document.querySelector('ul')
     const collapseArrow = document.querySelector('#collapseArrow')
     const title = document.querySelector('#title')
+    const todayButton = document.querySelector('.todayButton')
+    const allTasksButton = document.querySelector('.allTasksButton')
+    const completedButton = document.querySelector('.completedButton')
     const modalContainer = document.querySelector('#modalContainer')
     const addNewProjectModal = document.querySelector('#addNewProjectModal')
     const newProjectInput = document.querySelector('#newProjectInput')
@@ -30,18 +33,24 @@ export const dom = (() => {
         addNewProjectModal.classList.remove('hidden')
     }
 
-    function renderRemoveProjectModal(e) {
-        let projectIndex = e.dataset.projectIndex
+    function renderRemoveProjectModal(target) {
+        let projectIndex = target.dataset.projectIndex
         const message = document.querySelector('#delete-project-message')
         const projectName = document.getElementById(projectIndex)
+        const projectList = document.querySelector(`li[data-project-index="${projectIndex}"]`)
+        const projectListAll = document.querySelectorAll(`li.project`)
         message.innerHTML = `Project <span class="boldText projectSelectedForRemove" data-project-index="${projectIndex}">${projectName.textContent}</span> will be gone forever!`
         modalContainer.classList.remove('hidden')
         deleteProjectModal.classList.remove('hidden')
+        projectListAll.forEach(list => {
+            list.classList.remove('selected')
+        })
+        projectList.classList.add('selected')
     }
 
-    function renderRemoveTaskModal(e) {
-        let taskIndex = e.dataset.taskIndex
-        let projectIndex = e.dataset.projectIndex
+    function renderRemoveTaskModal(target) {
+        let taskIndex = target.dataset.taskIndex
+        let projectIndex = target.dataset.projectIndex
         const deleteTaskSpan = document.querySelector("#delete-task-message")
         const taskName = document.getElementById(`task-${taskIndex}`)
         deleteTaskSpan.textContent = taskName.textContent
@@ -72,20 +81,37 @@ export const dom = (() => {
     }
 
     function renderToday() {
-        // resetPage()
+        removeSelectedProject()
+        allTasksButton.classList.remove('selected')
+        completedButton.classList.remove('selected')
+        todayButton.classList.add('selected')
+        title.textContent = 'Today'
         // updateTaskInToday()
         Tasks.checkDate()
-        title.textContent = 'Today'
     }
 
     function renderAllTasks() {
-        // resetPage()
+        removeSelectedProject()
+        todayButton.classList.remove('selected')
+        completedButton.classList.remove('selected')
+        allTasksButton.classList.add('selected')
         title.textContent = 'All Tasks'
     }
 
     function renderCompletedTasks() {
-        // resetPage()
+        removeSelectedProject()
+        todayButton.classList.remove('selected')
+        allTasksButton.classList.remove('selected')
+        completedButton.classList.add('selected')
         title.textContent = 'Completed Tasks'
+    }
+
+    function removeSelectedProject() {
+        const projectList = document.querySelectorAll('li.project')
+        const listArray = Array.from(projectList)
+        listArray.forEach(list => {
+            list.classList.remove('selected')
+        })
     }
 
     function exitAddProject() {
@@ -130,6 +156,7 @@ export const dom = (() => {
             }
             else if (target.classList.contains('removeProject')) {
                 renderRemoveProjectModal(target)
+                renderTaskList(target)
             }
             else if (target.classList.contains('removeTask')) {
                 renderRemoveTaskModal(target)
@@ -171,9 +198,7 @@ export const dom = (() => {
                 renderCompletedTasks()
             }
             else if (target.classList.contains('project')) {
-                const projectList = document.querySelectorAll('li.project')
-                const projectNameContainer = document.querySelectorAll('div.project')
-                selectField(target, projectList, projectNameContainer)
+                selectProjectField(target)
                 renderTaskList(target)
             }
             else if (target.id === 'addProjectButton') {
@@ -197,33 +222,42 @@ export const dom = (() => {
         })
     }
 
-    function selectField(target, projectList, projectNameContainer) {
+    function selectProjectField(target) {
+        const projectList = document.querySelectorAll('li.project')
+        const projectNameContainer = document.querySelectorAll('div.project')
         const listArray = Array.from(projectList)
         const containerArray = Array.from(projectNameContainer)
         listArray.forEach(list => {
             if (target.classList === list.classList) {
                 listArray.forEach(listedElement => {
-                    listedElement.classList = 'project'
+                    listedElement.classList.remove('selected')
                 })
                 list.classList.add('selected')
             }
         })
         containerArray.forEach(container => {
             const containerCounter = containerArray.indexOf(container)
-                if (target.classList === container.classList) {
-                    listArray.forEach(listedElement => {
-                        listedElement.classList = 'project'
-                    })
-                    listArray[containerCounter].classList.add('selected')
-                } 
+            if (target.classList === container.classList) {
+                listArray.forEach(listedElement => {
+                    listedElement.classList.remove('selected')
+                })
+                listArray[containerCounter].classList.add('selected')
+            }
         })
+        todayButton.classList.remove('selected')
+        completedButton.classList.remove('selected')
+        allTasksButton.classList.remove('selected')
     }
 
     function renderTaskList(target) {
-        // let projectId = target.id
-        // title.dataset.projectIndex = projectId
-        // target.classList.toggle('selected')
-        title.textContent = target.textContent
+        let projectIndex = target.dataset.projectIndex
+        const projectList = document.querySelector(`li[data-project-index="${projectIndex}"]`)
+        if (target.classList.contains('removeProject')) {
+            title.textContent = projectList.textContent
+        }
+        else {
+            title.textContent = target.textContent
+        }
         updateTaskInProject()
     }
 
@@ -234,7 +268,8 @@ export const dom = (() => {
 
     function updateTaskInProject() {
         resetTaskList()
-        let projectIndex = title.dataset.projectIndex
+        const selectedProject = document.querySelector('.selected')
+        let projectIndex = selectedProject.dataset.projectIndex
         let arrayOfTasksInProject = Projects.projectsArray[projectIndex].tasks
         arrayOfTasksInProject.forEach(task => {
             let taskIndex = arrayOfTasksInProject.indexOf(task)
