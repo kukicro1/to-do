@@ -27,6 +27,19 @@ export const dom = (() => {
     const editTaskDescriptionInput = document.querySelector('#editTaskDescriptionInput')
     const editTaskDateInput = document.querySelector('#editTaskDateInput')
     const editTaskPriorityInput = document.querySelector('#editTaskPriorityInput')
+    const message = document.querySelector('#delete-project-message')
+    const deleteTaskSpan = document.querySelector("#delete-task-message")
+
+    function collapseNavbar(target) {
+        if (target.classList.contains('fa-bars')) {
+            target.classList = 'fa-solid fa-x'
+        }
+        else {
+            target.classList = 'fa-solid fa-bars'
+        }
+        navigation.classList.toggle('collapse--navigation')
+        main.classList.toggle('expand--main')
+    }
 
     function renderAddProjectModal() {
         modalContainer.classList.remove('hidden')
@@ -35,11 +48,10 @@ export const dom = (() => {
 
     function renderRemoveProjectModal(target) {
         let projectIndex = target.dataset.projectIndex
-        const message = document.querySelector('#delete-project-message')
         const projectName = document.getElementById(projectIndex)
         const projectList = document.querySelector(`li[data-project-index="${projectIndex}"]`)
         const projectListAll = document.querySelectorAll(`li.project`)
-        message.innerHTML = `Project <span class="boldText projectSelectedForRemove" data-project-index="${projectIndex}">${projectName.textContent}</span> will be gone forever!`
+        message.innerHTML = `Project <span class="boldText deleteProjectSpan" data-project-index="${projectIndex}">${projectName.textContent}</span> will be gone forever!`
         modalContainer.classList.remove('hidden')
         deleteProjectModal.classList.remove('hidden')
         projectListAll.forEach(list => {
@@ -51,7 +63,6 @@ export const dom = (() => {
     function renderRemoveTaskModal(target) {
         let taskIndex = target.dataset.taskIndex
         let projectIndex = target.dataset.projectIndex
-        const deleteTaskSpan = document.querySelector("#delete-task-message")
         const taskName = document.getElementById(`task-${taskIndex}`)
         deleteTaskSpan.textContent = taskName.textContent
         deleteTaskSpan.setAttribute('data-task-index', taskIndex)
@@ -70,11 +81,6 @@ export const dom = (() => {
         editTaskModal.classList.remove('hidden')
     }
 
-    function collapseNavbar() {
-        navigation.classList.toggle('collapse--navigation')
-        main.classList.toggle('expand--main')
-    }
-
     function collapseProjects() {
         projects.classList.toggle('collapse--projects')
         collapseArrow.classList.toggle('rotate--arrow')
@@ -86,7 +92,6 @@ export const dom = (() => {
         completedButton.classList.remove('selected')
         todayButton.classList.add('selected')
         title.textContent = 'Today'
-        // updateTaskInToday()
         Tasks.checkDate()
     }
 
@@ -151,7 +156,10 @@ export const dom = (() => {
     function eventHandler() {
         document.addEventListener('click', (event) => {
             const { target } = event
-            if (target.classList.contains('addNewProject')) {
+            if (target.id === 'toggleMenu') {
+                collapseNavbar(target)
+            }
+            else if (target.classList.contains('addNewProject')) {
                 renderAddProjectModal()
             }
             else if (target.classList.contains('removeProject')) {
@@ -182,9 +190,6 @@ export const dom = (() => {
             else if (target.classList.contains('exit-add-task')) {
                 exitAddTask()
             }
-            else if (target.id === 'toggleMenu') {
-                collapseNavbar()
-            }
             else if (target.classList.contains('showProject')) {
                 collapseProjects()
             }
@@ -206,8 +211,8 @@ export const dom = (() => {
                 updateProjectInList()
             }
             else if (target.classList.contains('delete-project')) {
-                Projects.deleteProjectFromArray()
                 deleteProjectFromList()
+                Projects.deleteProjectFromArray()
                 updateProjectInList()
                 resetTaskList()
                 renderToday()
@@ -216,7 +221,9 @@ export const dom = (() => {
                 manageAddTaskModal()
             }
             else if (target.classList.contains('delete-task')) {
-                Tasks.deleteTask()
+                let taskIndex = deleteTaskSpan.dataset.taskIndex
+                let projectIndex = deleteTaskSpan.dataset.projectIndex
+                Tasks.deleteTask(taskIndex, projectIndex)
                 deleteTaskFromList()
             }
         })
@@ -309,16 +316,71 @@ export const dom = (() => {
             wrapTaskDate.textContent = task.dueDate
             removeTaskIcon.setAttribute('data-project-index', projectIndex)
             removeTaskIcon.setAttribute('data-task-index', taskIndex)
+            wrapEachTask.setAttribute('data-project-index', projectIndex)
+            wrapEachTask.setAttribute('data-task-index', taskIndex)
+        })
+    }
+
+    function updateTaskInToday() {
+        resetTaskList()
+        const selectedProject = document.querySelector('.selected')
+        let projectIndex = selectedProject.dataset.projectIndex
+        let arrayOfTasksInProject = Projects.projectsArray[projectIndex].tasks
+        arrayOfTasksInProject.forEach(task => {
+            let taskIndex = arrayOfTasksInProject.indexOf(task)
+            const wrapEachTask = document.createElement('div')
+            wrapEachTask.classList = 'taskList'
+            const wrapper1 = document.createElement('div')
+            wrapper1.classList = 'wrapper1'
+            wrapper1.setAttribute('title', 'Open Task')
+            const checkTask = document.createElement('input')
+            const wrapTaskName = document.createElement('div')
+            checkTask.classList = 'checkTask'
+            checkTask.setAttribute('type', 'checkbox')
+            checkTask.setAttribute('title', 'Mark as completed')
+            wrapTaskName.classList = 'taskName'
+            wrapTaskName.id = `task-${taskIndex}`
+            const wrapper2 = document.createElement('div')
+            wrapper2.classList = 'wrapper2'
+            const wrapTaskDate = document.createElement('div')
+            wrapTaskDate.classList = 'taskDate'
+            const wrapEditTask = document.createElement('div')
+            wrapEditTask.classList = 'editTask'
+            wrapEditTask.setAttribute('title', 'Edit Task')
+            const editTaskIcon = document.createElement('i')
+            editTaskIcon.classList = 'fa-regular fa-pen-to-square editTask'
+            const wrapRemoveTask = document.createElement('div')
+            wrapRemoveTask.classList = 'removeTask'
+            wrapRemoveTask.setAttribute('title', 'Remove Task')
+            const removeTaskIcon = document.createElement('i')
+            removeTaskIcon.classList = 'fa-regular fa-trash-can removeTask'
+            wrapTask.append(wrapEachTask)
+            wrapEachTask.append(wrapper1, wrapper2)
+            wrapper1.append(checkTask, wrapTaskName)
+            wrapper2.append(wrapTaskDate, wrapEditTask, wrapRemoveTask)
+            wrapEditTask.append(editTaskIcon)
+            wrapRemoveTask.append(removeTaskIcon)
+            wrapTaskName.textContent = task.title
+            wrapTaskDate.textContent = task.dueDate
+            removeTaskIcon.setAttribute('data-project-index', projectIndex)
+            removeTaskIcon.setAttribute('data-task-index', taskIndex)
+            wrapEachTask.setAttribute('data-project-index', projectIndex)
             wrapEachTask.setAttribute('data-task-index', taskIndex)
         })
     }
 
     function manageAddTaskModal() {
+        const title = document.querySelector('#title')
         if (addTaskTitleInput.value === '' ||
             addTaskDescriptionInput.value === '' ||
             addTaskDateInput.value === '' ||
             addTaskPriorityInput.value === '') {
             alert('Please fill in empty slots.')
+        }
+        else if (title.textContent === 'Today' ||
+            title.textContent === 'All Tasks' ||
+            title.textContent === 'Completed Tasks') {
+            alert('You have to chose project to add tasks.')
         }
         else {
             Tasks.addTaskToProject()
@@ -366,6 +428,7 @@ export const dom = (() => {
         }
         else {
             Projects.addProjectToArray()
+            Projects.resetProjectIndexInTask()
             modalContainer.classList.toggle('hidden')
             addNewProjectModal.classList.toggle('hidden')
             newProjectInput.value = ''
@@ -373,7 +436,7 @@ export const dom = (() => {
     }
 
     function deleteProjectFromList() {
-        const selectedProjectForRemove = document.querySelector('.projectSelectedForRemove')
+        const selectedProjectForRemove = document.querySelector('.deleteProjectSpan')
         let projectIndex = selectedProjectForRemove.dataset.projectIndex
         let projectContainer = document.querySelector(`li[data-project-index="${projectIndex}"]`)
         projectContainer.remove()

@@ -22,14 +22,33 @@ export const Projects = (() => {
     }
 
     function deleteProjectFromArray() {
-        const selectedProjectForRemove = document.querySelector('.projectSelectedForRemove')
+        const selectedProjectForRemove = document.querySelector('.deleteProjectSpan')
         let e = selectedProjectForRemove.dataset.projectIndex
         projectsArray.splice(e, 1)
+        
     }
+
+    function resetProjectIndexInTask() {
+        const projectDiv = document.querySelectorAll('div.project')
+        projectsArray.forEach(project => {
+            projectDiv.forEach(div => {
+                if (div.textContent === project.name) {
+                    project.tasks.forEach(task => {
+                        console.log(task.projectIndex)
+                        console.log(div.id)
+                        task.projectIndex = div.id
+                    })
+                }
+            })
+        })
+    }
+
+
 
     return {
         projectsArray,
         deleteProjectFromArray,
-        addProjectToArray
+        addProjectToArray,
+        resetProjectIndexInTask
     }
 })()

@@ -100,7 +100,7 @@ nav {
     justify-content: start;
 }
 
-#wrapGeneral .selected{
+#wrapGeneral .selected {
     background-color: #ccd3f5;
     box-shadow: inset 0px 0px 0px 2px #98A8F8, inset 0px 0px 0px 2px #98A8F8, inset 0px 0px 0px 2px #98A8F8, inset 0px 0px 0px 2px #98A8F8;
     font-weight: bold;
@@ -238,13 +238,18 @@ main {
 }
 
 #taskInfo {
+    width: 100%;
+    min-width: 300px;
+    max-width: 800px;
+    justify-self: center;
     font-size: 1.5em;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px black solid;
-    padding-left: 35px;
+    padding-left: 20px;
     padding-bottom: 10px;
+    padding-right: 20px;
 }
 
 #addTask :hover {
