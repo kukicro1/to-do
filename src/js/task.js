@@ -17,25 +17,28 @@ export const Tasks = (() => {
         }
     }
 
-    function addTaskToProject() {
-        const selectedProject = document.querySelector('.selected')
-        const selectedTask = document.querySelector('a')
+    function addTaskToProject(selectedProject) {
         let projectIndex = selectedProject.dataset.projectIndex
-        let taskIndex = ''
         const task = new Task()
         task.title = addTaskTitleInput.value
         task.description = addTaskDescriptionInput.value
         task.dueDate = addTaskDateInput.value
         task.priority = addTaskPriorityInput.value
         task.status = false
-        task.projectIndex = projectIndex
+        task.projectIndex = ''
         task.taskIndex = ''
         Projects.projectsArray[projectIndex].tasks.push(task)
-        console.log(Projects.projectsArray)
+        Projects.updateProjectIndex()
     }
-    function updateTaskIndex () {
-        Projects.projectsArray[projectIndex].tasks.push(task)
 
+    function updateTaskIndex() {
+        Projects.projectsArray.forEach(project => {
+            project.tasks.forEach(task => {
+                let taskCounter = project.tasks.indexOf(task)
+                task.taskIndex = taskCounter
+                console.log(Projects.projectsArray)
+            })
+        })
     }
 
     function deleteTask(taskIndex, projectIndex) {
@@ -53,7 +56,7 @@ export const Tasks = (() => {
                 const formattedTaskDate = format(parseDueDate, 'dd-MM-yyyy')
                 if (formattedTaskDate === formattedToday) {
                     console.log(formattedTaskDate, formattedToday)
-                    // dom.updateTaskInProject()
+                    dom.renderTask(task.projectIndex, task.taskIndex, task)
                 }
             })
         })
@@ -62,6 +65,7 @@ export const Tasks = (() => {
     return {
         addTaskToProject,
         deleteTask,
-        checkDate
+        checkDate,
+        updateTaskIndex
     }
 })()

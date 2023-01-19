@@ -18,29 +18,22 @@ export const Projects = (() => {
         project.name = newProjectInput.value
         project.tasks = []
         projectsArray.push(project)
-        console.log(projectsArray)
     }
 
     function deleteProjectFromArray() {
         const selectedProjectForRemove = document.querySelector('.deleteProjectSpan')
         let e = selectedProjectForRemove.dataset.projectIndex
         projectsArray.splice(e, 1)
-        
     }
 
-    function resetProjectIndexInTask() {
-        const projectDiv = document.querySelectorAll('div.project')
+    function updateProjectIndex() {
         projectsArray.forEach(project => {
-            projectDiv.forEach(div => {
-                if (div.textContent === project.name) {
-                    project.tasks.forEach(task => {
-                        console.log(task.projectIndex)
-                        console.log(div.id)
-                        task.projectIndex = div.id
-                    })
-                }
+            let projectCounter = projectsArray.indexOf(project)
+            project.tasks.forEach(task => {
+                task.projectIndex = projectCounter
             })
         })
+        console.log(projectsArray)
     }
 
 
@@ -49,6 +42,6 @@ export const Projects = (() => {
         projectsArray,
         deleteProjectFromArray,
         addProjectToArray,
-        resetProjectIndexInTask
+        updateProjectIndex
     }
 })()
