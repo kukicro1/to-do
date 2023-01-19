@@ -6,12 +6,12 @@ import { format, parse } from "date-fns"
 export const Tasks = (() => {
 
     class Task {
-        constructor(title, description, dueDate, priority, status, projectIndex, taskIndex) {
+        constructor(title, description, dueDate, priority, checkStatus, projectIndex, taskIndex) {
             this.title = title
             this.description = description
             this.dueDate = dueDate
             this.priority = priority
-            this.status = status
+            this.checkStatus = checkStatus
             this.projectIndex = projectIndex
             this.taskIndex = taskIndex
         }
@@ -24,7 +24,7 @@ export const Tasks = (() => {
         task.description = addTaskDescriptionInput.value
         task.dueDate = addTaskDateInput.value
         task.priority = addTaskPriorityInput.value
-        task.status = false
+        task.checkStatus = false
         task.projectIndex = ''
         task.taskIndex = ''
         Projects.projectsArray[projectIndex].tasks.push(task)
@@ -55,7 +55,38 @@ export const Tasks = (() => {
                 const parseDueDate = parse(task.dueDate, 'yyyy-MM-dd', new Date())
                 const formattedTaskDate = format(parseDueDate, 'dd-MM-yyyy')
                 if (formattedTaskDate === formattedToday) {
-                    console.log(formattedTaskDate, formattedToday)
+                    dom.renderTask(task.projectIndex, task.taskIndex, task)
+                }
+            })
+        })
+    }
+
+    function allTasks() {
+        Projects.projectsArray.forEach(project => {
+            project.tasks.forEach(task => {
+                dom.renderTask(task.projectIndex, task.taskIndex, task)
+            })
+        })
+    }
+
+    function changeCheckStatus(checkInput) {
+        let projectIndex = checkInput.dataset.projectIndex
+        let taskIndex = checkInput.dataset.taskIndex
+        if (checkInput.checked === true) {
+            Projects.projectsArray[projectIndex].tasks[taskIndex].checkStatus = true
+        }
+        else if (checkInput.checked === false) {
+            Projects.projectsArray[projectIndex].tasks[taskIndex].checkStatus = false
+        }
+    }
+
+    function checkCompleted() {
+        Projects.projectsArray.forEach(project => {
+            project.tasks.forEach(task => {
+                if (task.checkStatus === false) {
+                    return
+                }
+                else if (task.checkStatus === true) {
                     dom.renderTask(task.projectIndex, task.taskIndex, task)
                 }
             })
@@ -66,6 +97,9 @@ export const Tasks = (() => {
         addTaskToProject,
         deleteTask,
         checkDate,
-        updateTaskIndex
+        updateTaskIndex,
+        allTasks,
+        changeCheckStatus,
+        checkCompleted
     }
 })()

@@ -103,6 +103,7 @@ export const dom = (() => {
         allTasksButton.classList.add('selected')
         title.textContent = 'All Tasks'
         resetTaskList()
+        Tasks.allTasks()
     }
 
     function renderCompletedTasks() {
@@ -112,6 +113,7 @@ export const dom = (() => {
         completedButton.classList.add('selected')
         title.textContent = 'Completed Tasks'
         resetTaskList()
+        Tasks.checkCompleted()
     }
 
     function removeSelectedProject() {
@@ -232,7 +234,20 @@ export const dom = (() => {
                 deleteTaskFromList()
                 Tasks.updateTaskIndex()
             }
+            else if (target.classList.contains('checkTask')) {
+                Tasks.changeCheckStatus(target)
+            }
         })
+    }
+
+    function markAsChecked(projectIndex, taskIndex, checkTask) {
+        let checkStatus = Projects.projectsArray[projectIndex].tasks[taskIndex].checkStatus
+        if (checkStatus === true) {
+            checkTask.checked = true
+        }
+        else if (checkStatus === false) {
+            checkTask.checked = false
+        }
     }
 
     function selectProjectField(target) {
@@ -314,10 +329,13 @@ export const dom = (() => {
         wrapRemoveTask.append(removeTaskIcon)
         wrapTaskName.textContent = task.title
         wrapTaskDate.textContent = task.dueDate
+        checkTask.setAttribute('data-project-index', projectIndex)
+        checkTask.setAttribute('data-task-index', taskIndex)
         removeTaskIcon.setAttribute('data-project-index', projectIndex)
         removeTaskIcon.setAttribute('data-task-index', taskIndex)
         wrapEachTask.setAttribute('data-project-index', projectIndex)
         wrapEachTask.setAttribute('data-task-index', taskIndex)
+        markAsChecked(projectIndex, taskIndex, checkTask)
     }
 
     function updateTaskInProject() {
