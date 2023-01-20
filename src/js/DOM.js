@@ -1,6 +1,5 @@
 import { Projects } from "./project"
 import { Tasks } from "./task"
-import format from "date-fns/format"
 
 export const dom = (() => {
 
@@ -87,7 +86,7 @@ export const dom = (() => {
     }
 
     function renderToday() {
-        removeSelectedProject()
+        removeSelection()
         allTasksButton.classList.remove('selected')
         completedButton.classList.remove('selected')
         todayButton.classList.add('selected')
@@ -97,7 +96,7 @@ export const dom = (() => {
     }
 
     function renderAllTasks() {
-        removeSelectedProject()
+        removeSelection()
         todayButton.classList.remove('selected')
         completedButton.classList.remove('selected')
         allTasksButton.classList.add('selected')
@@ -107,7 +106,7 @@ export const dom = (() => {
     }
 
     function renderCompletedTasks() {
-        removeSelectedProject()
+        removeSelection()
         todayButton.classList.remove('selected')
         allTasksButton.classList.remove('selected')
         completedButton.classList.add('selected')
@@ -116,12 +115,15 @@ export const dom = (() => {
         Tasks.checkCompleted()
     }
 
-    function removeSelectedProject() {
+    function removeSelection() {
         const projectList = document.querySelectorAll('li.project')
         const listArray = Array.from(projectList)
         listArray.forEach(list => {
             list.classList.remove('selected')
         })
+        todayButton.classList.remove('selected')
+        completedButton.classList.remove('selected')
+        allTasksButton.classList.remove('selected')
     }
 
     function exitAddProject() {
@@ -168,6 +170,7 @@ export const dom = (() => {
                 renderAddProjectModal()
             }
             else if (target.classList.contains('removeProject')) {
+                removeSelection()
                 renderRemoveProjectModal(target)
                 renderTaskList(target)
             }
@@ -199,12 +202,15 @@ export const dom = (() => {
                 collapseProjects()
             }
             else if (target.classList.contains('todayButton')) {
+                Tasks.updateTaskIndex()
                 renderToday()
             }
             else if (target.classList.contains('allTasksButton')) {
+                Tasks.updateTaskIndex()
                 renderAllTasks()
             }
             else if (target.classList.contains('completedButton')) {
+                Tasks.updateTaskIndex()
                 renderCompletedTasks()
             }
             else if (target.classList.contains('project')) {
@@ -219,6 +225,7 @@ export const dom = (() => {
                 deleteProjectFromList()
                 Projects.deleteProjectFromArray()
                 Projects.updateProjectIndex()
+                Tasks.updateTaskIndex()
                 updateProjectInList()
                 resetTaskList()
                 renderToday()
@@ -228,15 +235,39 @@ export const dom = (() => {
                 Tasks.updateTaskIndex()
             }
             else if (target.classList.contains('delete-task')) {
-                let taskIndex = deleteTaskSpan.dataset.taskIndex
-                let projectIndex = deleteTaskSpan.dataset.projectIndex
-                Tasks.deleteTask(taskIndex, projectIndex)
-                deleteTaskFromList()
-                Tasks.updateTaskIndex()
+                renderDeleteTask()
             }
             else if (target.classList.contains('checkTask')) {
                 Tasks.changeCheckStatus(target)
+                if (title.textContent === 'Completed Tasks') {
+                    renderCompletedTasks()
+                }
             }
+        })
+    }
+
+    function renderDeleteTask() {
+        let taskIndex = deleteTaskSpan.dataset.taskIndex
+        let projectIndex = deleteTaskSpan.dataset.projectIndex
+        Tasks.deleteTask(taskIndex, projectIndex)
+        Tasks.updateTaskIndex()
+        deleteTaskFromList()
+    }
+
+    function renderPriority() {
+        const taskList = document.querySelectorAll('.taskList')
+        taskList.forEach(task => {
+            let projectIndex = task.dataset.projectIndex
+            let taskIndex = task.dataset.taskIndex
+            let priority = Projects.projectsArray[projectIndex].tasks[taskIndex].priority
+            if (priority === 'notImportant') {
+                task.classList.add('notImportant')
+            }
+            else if (priority === 'important') {
+                task.classList.add('important')
+            }
+            else if (priority === 'veryImportant')
+                task.classList.add('veryImportant')
         })
     }
 
@@ -251,6 +282,7 @@ export const dom = (() => {
     }
 
     function selectProjectField(target) {
+        removeSelection()
         const projectList = document.querySelectorAll('li.project')
         const projectNameContainer = document.querySelectorAll('div.project')
         const listArray = Array.from(projectList)
@@ -272,20 +304,12 @@ export const dom = (() => {
                 listArray[containerCounter].classList.add('selected')
             }
         })
-        todayButton.classList.remove('selected')
-        completedButton.classList.remove('selected')
-        allTasksButton.classList.remove('selected')
     }
 
     function renderTaskList(target) {
         let projectIndex = target.dataset.projectIndex
         const projectList = document.querySelector(`li[data-project-index="${projectIndex}"]`)
-        if (target.classList.contains('removeProject')) {
-            title.textContent = projectList.textContent
-        }
-        else {
-            title.textContent = target.textContent
-        }
+        target.classList.contains('removeProject') ? title.textContent = projectList.textContent : title.textContent = target.textContent
         updateTaskInProject()
     }
 
@@ -336,6 +360,7 @@ export const dom = (() => {
         wrapEachTask.setAttribute('data-project-index', projectIndex)
         wrapEachTask.setAttribute('data-task-index', taskIndex)
         markAsChecked(projectIndex, taskIndex, checkTask)
+        renderPriority()
     }
 
     function updateTaskInProject() {
@@ -350,7 +375,6 @@ export const dom = (() => {
     }
 
     function manageAddTaskModal() {
-        const title = document.querySelector('#title')
         const selectedProject = document.querySelector('.selected')
         if (addTaskTitleInput.value === '' ||
             addTaskDescriptionInput.value === '' ||
@@ -376,7 +400,22 @@ export const dom = (() => {
     }
 
     function deleteTaskFromList() {
-        updateTaskInProject()
+        const selectedProject = document.querySelector('.selected')
+        if (selectedProject.classList.contains('project')) {
+            updateTaskInProject()
+        }
+        else if (selectedProject.classList.contains('todayButton')) {
+            renderToday()
+            renderPriority()
+        }
+        else if (selectedProject.classList.contains('allTasksButton')) {
+            renderAllTasks()
+            renderPriority()
+        }
+        else if (selectedProject.classList.contains('completedButton')) {
+            renderCompletedTasks()
+            renderPriority()
+        }
         modalContainer.classList.toggle('hidden')
         deleteTaskModal.classList.toggle('hidden')
         newProjectInput.value = ''

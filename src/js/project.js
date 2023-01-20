@@ -36,8 +36,6 @@ export const Projects = (() => {
         console.log(projectsArray)
     }
 
-
-
     return {
         projectsArray,
         deleteProjectFromArray,

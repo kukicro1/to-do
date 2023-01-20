@@ -2,7 +2,6 @@ import { dom } from "./DOM";
 import { Projects } from "./project";
 import { format, parse } from "date-fns"
 
-
 export const Tasks = (() => {
 
     class Task {
@@ -72,23 +71,13 @@ export const Tasks = (() => {
     function changeCheckStatus(checkInput) {
         let projectIndex = checkInput.dataset.projectIndex
         let taskIndex = checkInput.dataset.taskIndex
-        if (checkInput.checked === true) {
-            Projects.projectsArray[projectIndex].tasks[taskIndex].checkStatus = true
-        }
-        else if (checkInput.checked === false) {
-            Projects.projectsArray[projectIndex].tasks[taskIndex].checkStatus = false
-        }
+        Projects.projectsArray[projectIndex].tasks[taskIndex].checkStatus = checkInput.checked ? true : false
     }
 
     function checkCompleted() {
         Projects.projectsArray.forEach(project => {
             project.tasks.forEach(task => {
-                if (task.checkStatus === false) {
-                    return
-                }
-                else if (task.checkStatus === true) {
-                    dom.renderTask(task.projectIndex, task.taskIndex, task)
-                }
+                task.checkStatus ? dom.renderTask(task.projectIndex, task.taskIndex, task) : undefined
             })
         })
     }
@@ -100,6 +89,6 @@ export const Tasks = (() => {
         updateTaskIndex,
         allTasks,
         changeCheckStatus,
-        checkCompleted
+        checkCompleted,
     }
 })()
