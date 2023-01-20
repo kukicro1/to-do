@@ -43,7 +43,6 @@ export const Tasks = (() => {
             project.tasks.forEach(task => {
                 let taskCounter = project.tasks.indexOf(task)
                 task.taskIndex = taskCounter
-                console.log(Projects.projectsArray)
             })
         })
     }
@@ -51,7 +50,6 @@ export const Tasks = (() => {
     function deleteTask(taskIndex, projectIndex) {
         let taskInProjectArray = Projects.projectsArray[projectIndex].tasks
         taskInProjectArray.splice(taskIndex, 1)
-        console.log(Projects.projectsArray)
     }
 
     function checkDate() {

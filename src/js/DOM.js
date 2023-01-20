@@ -32,9 +32,115 @@ export const dom = (() => {
     const editTaskTitle = document.querySelector('.edit-task-title')
     const taskDescriptionModal = document.querySelector('#taskDescriptionModal')
 
+    function loadProjects() {
+        console.log(Projects.projectsArray)
+        updateProjectInList()
+        renderToday()
+    }
+
+    function eventHandler() {
+        document.addEventListener('click', (event) => {
+            const { target } = event
+            if (target.id === 'toggleMenu') {
+                collapseNavbar(target)
+            }
+            else if (target.classList.contains('addNewProject')) {
+                renderAddProjectModal()
+            }
+            else if (target.classList.contains('removeProject')) {
+                removeSelection()
+                renderRemoveProjectModal(target)
+                renderTaskList(target)
+            }
+            else if (target.classList.contains('removeTask')) {
+                renderRemoveTaskModal(target)
+            }
+            else if (target.classList.contains('addTask')) {
+                renderAddTaskModal()
+            }
+            else if (target.classList.contains('editTask')) {
+                renderEditTaskModal(target)
+            }
+            else if (target.classList.contains('exit-project')) {
+                exitAddProject()
+            }
+            else if (target.classList.contains('exit-delete-project')) {
+                exitDeleteProject()
+            }
+            else if (target.classList.contains('exit-delete-task')) {
+                exitDeleteTask()
+            }
+            else if (target.classList.contains('exit-edit-task')) {
+                exitEditTask()
+            }
+            else if (target.classList.contains('exit-add-task')) {
+                exitAddTask()
+            }
+            else if (target.classList.contains('showProject')) {
+                collapseProjects()
+            }
+            else if (target.classList.contains('todayButton')) {
+                Tasks.updateTaskIndex()
+                renderToday()
+            }
+            else if (target.classList.contains('allTasksButton')) {
+                Tasks.updateTaskIndex()
+                renderAllTasks()
+            }
+            else if (target.classList.contains('completedButton')) {
+                Tasks.updateTaskIndex()
+                renderCompletedTasks()
+            }
+            else if (target.classList.contains('project')) {
+                selectProjectField(target)
+                renderTaskList(target)
+            }
+            else if (target.id === 'addProjectButton') {
+                manageAddProjectModal()
+                updateProjectInList()
+                localStorage.setItem('projects', JSON.stringify(Projects.projectsArray))
+            }
+            else if (target.classList.contains('delete-project')) {
+                deleteProjectFromList()
+                Projects.deleteProjectFromArray()
+                Projects.updateProjectIndex()
+                Tasks.updateTaskIndex()
+                updateProjectInList()
+                resetTaskList()
+                renderToday()
+                localStorage.setItem('projects', JSON.stringify(Projects.projectsArray))
+            }
+            else if (target.id === 'addTask') {
+                manageAddTaskModal()
+                Tasks.updateTaskIndex()
+                localStorage.setItem('projects', JSON.stringify(Projects.projectsArray))
+            }
+            else if (target.classList.contains('delete-task')) {
+                renderDeleteTask()
+                localStorage.setItem('projects', JSON.stringify(Projects.projectsArray))
+            }
+            else if (target.classList.contains('checkTask')) {
+                Tasks.changeCheckStatus(target)
+                if (title.textContent === 'Completed Tasks') {
+                    renderCompletedTasks()
+                }
+                localStorage.setItem('projects', JSON.stringify(Projects.projectsArray))
+            }
+            else if (target.classList.contains('submit-edit-task')) {
+                manageEditTaskModal(editTaskTitle.dataset.projectIndex, editTaskTitle.dataset.taskIndex)
+                localStorage.setItem('projects', JSON.stringify(Projects.projectsArray))
+            }
+            else if (target.classList.contains('taskName')) {
+                renderTaskDescription(target)
+            }
+            else if (target.classList.contains('exit-description-modal')) {
+                exitTaskDescription()
+            }
+        })
+    }
+
     function collapseNavbar(target) {
-        target.classList.contains('fa-bars') ? target.classList = 'fa-solid fa-x'
-            : target.classList = 'fa-solid fa-bars'
+        target.classList.contains('fa-bars') ? target.classList = 'fa-solid fa-x' : target.classList = 'fa-solid fa-bars'
         navigation.classList.toggle('collapse--navigation')
         main.classList.toggle('expand--main')
     }
@@ -116,7 +222,7 @@ export const dom = (() => {
         Tasks.checkCompleted()
     }
 
-    function renderTaskDescription(target){
+    function renderTaskDescription(target) {
         const taskDescription = document.querySelector('#taskDescription')
         let projectIndex = target.dataset.projectIndex
         let taskIndex = target.dataset.taskIndex
@@ -128,17 +234,6 @@ export const dom = (() => {
     function exitTaskDescription() {
         modalContainer.classList.add('hidden')
         taskDescriptionModal.classList.add('hidden')
-    }
-
-    function removeSelection() {
-        const projectList = document.querySelectorAll('li.project')
-        const listArray = Array.from(projectList)
-        listArray.forEach(list => {
-            list.classList.remove('selected')
-        })
-        todayButton.classList.remove('selected')
-        completedButton.classList.remove('selected')
-        allTasksButton.classList.remove('selected')
     }
 
     function exitAddProject() {
@@ -175,99 +270,15 @@ export const dom = (() => {
         addTaskPriorityInput.value = ''
     }
 
-    function eventHandler() {
-        document.addEventListener('click', (event) => {
-            const { target } = event
-            if (target.id === 'toggleMenu') {
-                collapseNavbar(target)
-            }
-            else if (target.classList.contains('addNewProject')) {
-                renderAddProjectModal()
-            }
-            else if (target.classList.contains('removeProject')) {
-                removeSelection()
-                renderRemoveProjectModal(target)
-                renderTaskList(target)
-            }
-            else if (target.classList.contains('removeTask')) {
-                renderRemoveTaskModal(target)
-            }
-            else if (target.classList.contains('addTask')) {
-                renderAddTaskModal()
-            }
-            else if (target.classList.contains('editTask')) {
-                renderEditTaskModal(target)
-            }
-            else if (target.classList.contains('exit-project')) {
-                exitAddProject()
-            }
-            else if (target.classList.contains('exit-delete-project')) {
-                exitDeleteProject()
-            }
-            else if (target.classList.contains('exit-delete-task')) {
-                exitDeleteTask()
-            }
-            else if (target.classList.contains('exit-edit-task')) {
-                exitEditTask()
-            }
-            else if (target.classList.contains('exit-add-task')) {
-                exitAddTask()
-            }
-            else if (target.classList.contains('showProject')) {
-                collapseProjects()
-            }
-            else if (target.classList.contains('todayButton')) {
-                Tasks.updateTaskIndex()
-                renderToday()
-            }
-            else if (target.classList.contains('allTasksButton')) {
-                Tasks.updateTaskIndex()
-                renderAllTasks()
-            }
-            else if (target.classList.contains('completedButton')) {
-                Tasks.updateTaskIndex()
-                renderCompletedTasks()
-            }
-            else if (target.classList.contains('project')) {
-                selectProjectField(target)
-                renderTaskList(target)
-            }
-            else if (target.id === 'addProjectButton') {
-                manageAddProjectModal()
-                updateProjectInList()
-            }
-            else if (target.classList.contains('delete-project')) {
-                deleteProjectFromList()
-                Projects.deleteProjectFromArray()
-                Projects.updateProjectIndex()
-                Tasks.updateTaskIndex()
-                updateProjectInList()
-                resetTaskList()
-                renderToday()
-            }
-            else if (target.id === 'addTask') {
-                manageAddTaskModal()
-                Tasks.updateTaskIndex()
-            }
-            else if (target.classList.contains('delete-task')) {
-                renderDeleteTask()
-            }
-            else if (target.classList.contains('checkTask')) {
-                Tasks.changeCheckStatus(target)
-                if (title.textContent === 'Completed Tasks') {
-                    renderCompletedTasks()
-                }
-            }
-            else if (target.classList.contains('submit-edit-task')) {
-                manageEditTaskModal(editTaskTitle.dataset.projectIndex, editTaskTitle.dataset.taskIndex)
-            }
-            else if (target.classList.contains('taskName')) {
-                renderTaskDescription(target)
-            }
-            else if (target.classList.contains('exit-description-modal')) {
-                exitTaskDescription()
-            }
+    function removeSelection() {
+        const projectList = document.querySelectorAll('li.project')
+        const listArray = Array.from(projectList)
+        listArray.forEach(list => {
+            list.classList.remove('selected')
         })
+        todayButton.classList.remove('selected')
+        completedButton.classList.remove('selected')
+        allTasksButton.classList.remove('selected')
     }
 
     function renderDeleteTask() {
@@ -524,7 +535,8 @@ export const dom = (() => {
     return {
         eventHandler,
         updateTaskInProject,
-        renderTask
+        renderTask,
+        loadProjects
     }
 })()
 

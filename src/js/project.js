@@ -1,10 +1,6 @@
-import { dom } from "./DOM"
-import { Tasks } from "./task"
-import format from "date-fns/format"
-
 export const Projects = (() => {
 
-    const projectsArray = []
+    let projectsArray = []
 
     class Project {
         constructor(name, tasks) {
@@ -12,6 +8,9 @@ export const Projects = (() => {
             this.tasks = tasks
         }
     }
+
+    const projectsFromStorage = JSON.parse(localStorage.getItem('projects'));
+    projectsArray = projectsFromStorage
 
     function addProjectToArray() {
         const project = new Project()
@@ -33,13 +32,12 @@ export const Projects = (() => {
                 task.projectIndex = projectCounter
             })
         })
-        console.log(projectsArray)
     }
 
     return {
         projectsArray,
         deleteProjectFromArray,
         addProjectToArray,
-        updateProjectIndex
+        updateProjectIndex,
     }
 })()
