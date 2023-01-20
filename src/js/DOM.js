@@ -30,6 +30,7 @@ export const dom = (() => {
     const deleteTaskSpan = document.querySelector("#delete-task-message")
     const wrapTask = document.querySelector('#wrapTask')
     const editTaskTitle = document.querySelector('.edit-task-title')
+    const taskDescriptionModal = document.querySelector('#taskDescriptionModal')
 
     function collapseNavbar(target) {
         target.classList.contains('fa-bars') ? target.classList = 'fa-solid fa-x'
@@ -113,6 +114,20 @@ export const dom = (() => {
         title.textContent = 'Completed Tasks'
         resetTaskList()
         Tasks.checkCompleted()
+    }
+
+    function renderTaskDescription(target){
+        const taskDescription = document.querySelector('#taskDescription')
+        let projectIndex = target.dataset.projectIndex
+        let taskIndex = target.dataset.taskIndex
+        taskDescription.textContent = Projects.projectsArray[projectIndex].tasks[taskIndex].description
+        modalContainer.classList.remove('hidden')
+        taskDescriptionModal.classList.remove('hidden')
+    }
+
+    function exitTaskDescription() {
+        modalContainer.classList.add('hidden')
+        taskDescriptionModal.classList.add('hidden')
     }
 
     function removeSelection() {
@@ -246,6 +261,12 @@ export const dom = (() => {
             else if (target.classList.contains('submit-edit-task')) {
                 manageEditTaskModal(editTaskTitle.dataset.projectIndex, editTaskTitle.dataset.taskIndex)
             }
+            else if (target.classList.contains('taskName')) {
+                renderTaskDescription(target)
+            }
+            else if (target.classList.contains('exit-description-modal')) {
+                exitTaskDescription()
+            }
         })
     }
 
@@ -355,6 +376,8 @@ export const dom = (() => {
         wrapRemoveTask.append(removeTaskIcon)
         wrapTaskName.textContent = task.title
         wrapTaskDate.textContent = task.dueDate
+        wrapTaskName.setAttribute('data-project-index', projectIndex)
+        wrapTaskName.setAttribute('data-task-index', taskIndex)
         editTaskIcon.setAttribute('data-project-index', projectIndex)
         editTaskIcon.setAttribute('data-task-index', taskIndex)
         checkTask.setAttribute('data-project-index', projectIndex)
@@ -415,10 +438,10 @@ export const dom = (() => {
             if (title.textContent === 'Today') {
                 renderToday()
             }
-            else if (title.textContent === 'All Tasks') { 
+            else if (title.textContent === 'All Tasks') {
                 renderAllTasks()
             }
-            else if (title.textContent === 'Completed Tasks') { 
+            else if (title.textContent === 'Completed Tasks') {
                 renderCompletedTasks()
             }
             else {
