@@ -30,6 +30,14 @@ export const Tasks = (() => {
         Projects.updateProjectIndex()
     }
 
+    function editTask(projectIndex, taskIndex) {
+        let task = Projects.projectsArray[projectIndex].tasks[taskIndex]
+        task.title = editTaskTitleInput.value
+        task.description = editTaskDescriptionInput.value
+        task.dueDate = editTaskDateInput.value
+        task.priority = editTaskPriorityInput.value
+    }
+
     function updateTaskIndex() {
         Projects.projectsArray.forEach(project => {
             project.tasks.forEach(task => {
@@ -90,5 +98,6 @@ export const Tasks = (() => {
         allTasks,
         changeCheckStatus,
         checkCompleted,
+        editTask
     }
 })()

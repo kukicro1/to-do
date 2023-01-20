@@ -28,14 +28,12 @@ export const dom = (() => {
     const editTaskPriorityInput = document.querySelector('#editTaskPriorityInput')
     const message = document.querySelector('#delete-project-message')
     const deleteTaskSpan = document.querySelector("#delete-task-message")
+    const wrapTask = document.querySelector('#wrapTask')
+    const editTaskTitle = document.querySelector('.edit-task-title')
 
     function collapseNavbar(target) {
-        if (target.classList.contains('fa-bars')) {
-            target.classList = 'fa-solid fa-x'
-        }
-        else {
-            target.classList = 'fa-solid fa-bars'
-        }
+        target.classList.contains('fa-bars') ? target.classList = 'fa-solid fa-x'
+            : target.classList = 'fa-solid fa-bars'
         navigation.classList.toggle('collapse--navigation')
         main.classList.toggle('expand--main')
     }
@@ -75,7 +73,9 @@ export const dom = (() => {
         addTaskModal.classList.remove('hidden')
     }
 
-    function renderEditTaskModal() {
+    function renderEditTaskModal(target) {
+        editTaskTitle.dataset.projectIndex = target.dataset.projectIndex
+        editTaskTitle.dataset.taskIndex = target.dataset.taskIndex
         modalContainer.classList.remove('hidden')
         editTaskModal.classList.remove('hidden')
     }
@@ -181,7 +181,7 @@ export const dom = (() => {
                 renderAddTaskModal()
             }
             else if (target.classList.contains('editTask')) {
-                renderEditTaskModal()
+                renderEditTaskModal(target)
             }
             else if (target.classList.contains('exit-project')) {
                 exitAddProject()
@@ -242,6 +242,9 @@ export const dom = (() => {
                 if (title.textContent === 'Completed Tasks') {
                     renderCompletedTasks()
                 }
+            }
+            else if (target.classList.contains('submit-edit-task')) {
+                manageEditTaskModal(editTaskTitle.dataset.projectIndex, editTaskTitle.dataset.taskIndex)
             }
         })
     }
@@ -314,36 +317,35 @@ export const dom = (() => {
     }
 
     function resetTaskList() {
-        const wrapTask = document.querySelector('#wrapTask')
         wrapTask.textContent = ''
     }
 
     function renderTask(projectIndex, taskIndex, task) {
         const wrapEachTask = document.createElement('div')
-        wrapEachTask.classList = 'taskList'
         const wrapper1 = document.createElement('div')
-        wrapper1.classList = 'wrapper1'
-        wrapper1.setAttribute('title', 'Open Task')
         const checkTask = document.createElement('input')
         const wrapTaskName = document.createElement('div')
+        const wrapper2 = document.createElement('div')
+        const wrapTaskDate = document.createElement('div')
+        const wrapEditTask = document.createElement('div')
+        const editTaskIcon = document.createElement('i')
+        const wrapRemoveTask = document.createElement('div')
+        const removeTaskIcon = document.createElement('i')
+        wrapEachTask.classList = 'taskList'
+        wrapper1.classList = 'wrapper1'
+        wrapper1.setAttribute('title', 'Open Task')
         checkTask.classList = 'checkTask'
         checkTask.setAttribute('type', 'checkbox')
         checkTask.setAttribute('title', 'Mark as completed')
         wrapTaskName.classList = 'taskName'
         wrapTaskName.id = `task-${taskIndex}`
-        const wrapper2 = document.createElement('div')
         wrapper2.classList = 'wrapper2'
-        const wrapTaskDate = document.createElement('div')
         wrapTaskDate.classList = 'taskDate'
-        const wrapEditTask = document.createElement('div')
         wrapEditTask.classList = 'editTask'
         wrapEditTask.setAttribute('title', 'Edit Task')
-        const editTaskIcon = document.createElement('i')
         editTaskIcon.classList = 'fa-regular fa-pen-to-square editTask'
-        const wrapRemoveTask = document.createElement('div')
         wrapRemoveTask.classList = 'removeTask'
         wrapRemoveTask.setAttribute('title', 'Remove Task')
-        const removeTaskIcon = document.createElement('i')
         removeTaskIcon.classList = 'fa-regular fa-trash-can removeTask'
         wrapTask.append(wrapEachTask)
         wrapEachTask.append(wrapper1, wrapper2)
@@ -353,6 +355,8 @@ export const dom = (() => {
         wrapRemoveTask.append(removeTaskIcon)
         wrapTaskName.textContent = task.title
         wrapTaskDate.textContent = task.dueDate
+        editTaskIcon.setAttribute('data-project-index', projectIndex)
+        editTaskIcon.setAttribute('data-task-index', taskIndex)
         checkTask.setAttribute('data-project-index', projectIndex)
         checkTask.setAttribute('data-task-index', taskIndex)
         removeTaskIcon.setAttribute('data-project-index', projectIndex)
@@ -396,6 +400,36 @@ export const dom = (() => {
             addTaskDescriptionInput.value = ''
             addTaskDateInput.value = ''
             addTaskPriorityInput.value = ''
+        }
+    }
+
+    function manageEditTaskModal(projectIndex, taskIndex) {
+        if (editTaskTitleInput.value === '' ||
+            editTaskDescriptionInput.value === '' ||
+            editTaskDateInput.value === '' ||
+            editTaskPriorityInput.value === '') {
+            alert('Please fill in empty slots.')
+        }
+        else {
+            Tasks.editTask(projectIndex, taskIndex)
+            if (title.textContent === 'Today') {
+                renderToday()
+            }
+            else if (title.textContent === 'All Tasks') { 
+                renderAllTasks()
+            }
+            else if (title.textContent === 'Completed Tasks') { 
+                renderCompletedTasks()
+            }
+            else {
+                updateTaskInProject()
+            }
+            modalContainer.classList.toggle('hidden')
+            editTaskModal.classList.toggle('hidden')
+            editTaskTitleInput.value = ''
+            editTaskDescriptionInput.value = ''
+            editTaskDateInput.value = ''
+            editTaskPriorityInput.value = ''
         }
     }
 
